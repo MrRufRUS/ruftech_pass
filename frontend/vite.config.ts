@@ -23,6 +23,7 @@ export default defineConfig({
       ],
       reporter: ['text', 'html', 'lcov', 'json'],
       reportsDirectory: './coverage',
+      
     },
   }
 });
