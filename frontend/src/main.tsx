@@ -13,9 +13,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
-// Render the app
 const rootElement = document.getElementById('root')!
-if (!rootElement.innerHTML) {
+
+if (rootElement.hasAttribute('data-server-rendered')) {
+  // SSG page — hydrate pre-rendered HTML
+  rootElement.removeAttribute('data-server-rendered')
+  ReactDOM.hydrateRoot(
+    rootElement,
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>,
+  )
+} else {
+  // SPA page — render from scratch
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <StrictMode>
