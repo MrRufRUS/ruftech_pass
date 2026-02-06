@@ -28,3 +28,6 @@ storybook-static
 test-results
 playwright-report
 coverage
+e2e-coverage
+coverage-all
+.v8-coverage
