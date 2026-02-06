@@ -1,4 +1,5 @@
 import type { IHttpClient, IHttpFetch } from './client';
+import { createHttpClient } from './client';
 
 export class HttpError extends Error {
   readonly status: number;
@@ -17,13 +18,16 @@ export class HttpError extends Error {
  *
  * @example
  * ```ts
- * const client = DefaultHttpClient.create(globalThis.fetch.bind(globalThis));
- * const user = await client('/api/user/1', { parse: parseUser });
+ * const client = DefaultHttpClient
+ *   .create(globalThis.fetch.bind(globalThis))
+ *   .applyPlugin(withLogging(log));
+ *
+ * const user = await client.request('/api/user/1', { parse: parseUser });
  * ```
  */
 export const DefaultHttpClient = {
   create(fetch: IHttpFetch): IHttpClient {
-    return async (url, { parse, ...init }) => {
+    return createHttpClient(async (url, { parse, ...init }) => {
       const response = await fetch(url, init);
 
       if (!response.ok) {
@@ -32,6 +36,6 @@ export const DefaultHttpClient = {
 
       const data: unknown = await response.json();
       return parse(data);
-    };
+    });
   },
 };
