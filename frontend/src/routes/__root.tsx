@@ -4,8 +4,8 @@ import {
   DefaultHttpClient,
   HttpClientProvider,
   withLogging,
-} from '../shared/http'
-import { DefaultLogger, LoggerProvider } from '../shared/logger'
+} from '@/shared/http'
+import { DefaultLogger, LoggerProvider } from '@/shared/logger'
 
 // #можемПодменить
 const logger = DefaultLogger.create()
