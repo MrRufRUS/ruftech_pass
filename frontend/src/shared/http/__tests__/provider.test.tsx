@@ -13,6 +13,7 @@ describe('useHttpClient', () => {
     let captured: IHttpClient | null = null;
 
     function Consumer() {
+      // eslint-disable-next-line react-hooks/globals
       captured = useHttpClient();
       return null;
     }
