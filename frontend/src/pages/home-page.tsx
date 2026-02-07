@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next';
+import { useDocumentMeta } from '@/shared/i18n';
 
 export function HomePage() {
   const { t } = useTranslation('home');
+  useDocumentMeta('home');
 
   return (
     <section>

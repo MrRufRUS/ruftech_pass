@@ -8,3 +8,5 @@ export { DefaultI18n } from './default';
 
 export type { I18nProviderProps } from './provider';
 export { I18nProvider, useLocale } from './provider';
+
+export { useDocumentMeta } from './useDocumentMeta';

@@ -38,10 +38,16 @@ function injectMeta(template, { lang, title, description, canonical, hreflang, a
       .replace('<div id="root">', '<div id="root" data-server-rendered>')
   }
   return html
-    .replaceAll('<!--lang-->', lang)
-    .replaceAll('<!--title-->', title)
-    .replaceAll('<!--description-->', description)
-    .replaceAll('<!--canonical-->', canonical)
+    .replace(/<html lang="[^"]*">/, `<html lang="${lang}">`)
+    .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
+    .replace(/(property="og:title" content=")[^"]*"/, `$1${title}"`)
+    .replace(/(property="twitter:title" content=")[^"]*"/, `$1${title}"`)
+    .replace(/(name="description" content=")[^"]*"/, `$1${description}"`)
+    .replace(/(property="og:description" content=")[^"]*"/, `$1${description}"`)
+    .replace(/(property="twitter:description" content=")[^"]*"/, `$1${description}"`)
+    .replace(/(rel="canonical" href=")[^"]*"/, `$1${canonical}"`)
+    .replace(/(property="og:url" content=")[^"]*"/, `$1${canonical}"`)
+    .replace(/(property="twitter:url" content=")[^"]*"/, `$1${canonical}"`)
     .replace('<!--hreflang-->', hreflang)
 }
 
