@@ -1,0 +1,4 @@
+{
+  "extends": "@ruftech/typescript-config/library.json",
+  "include": ["src"]
+}
