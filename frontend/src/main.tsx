@@ -5,7 +5,12 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import './index.css'
 
 import { routeTree } from './routeTree.gen'
+import { detectLocale } from '@/shared/i18n'
+
 const router = createRouter({ routeTree })
+
+// Устанавливаем lang до рендера для корректной гидрации SSG
+document.documentElement.lang = detectLocale(window.location.pathname)
 
 declare module '@tanstack/react-router' {
   interface Register {

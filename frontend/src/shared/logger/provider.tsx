@@ -6,7 +6,7 @@ const LoggerContext = createContext<ILogger | null>(null);
 
 export interface LoggerProviderProps {
   logger: ILogger;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export function LoggerProvider({ logger, children }: LoggerProviderProps) {

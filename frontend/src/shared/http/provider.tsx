@@ -6,7 +6,7 @@ const HttpClientContext = createContext<IHttpClient | null>(null);
 
 export interface HttpClientProviderProps {
   client: IHttpClient;
-  children: ReactNode;
+  children?: ReactNode;
 }
 
 export function HttpClientProvider({ client, children }: HttpClientProviderProps) {
@@ -17,6 +17,7 @@ export function HttpClientProvider({ client, children }: HttpClientProviderProps
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useHttpClient(): IHttpClient {
   const client = useContext(HttpClientContext);
 

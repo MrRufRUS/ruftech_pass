@@ -4,12 +4,12 @@ import type { IHttpFn, IHttpOptions } from '../client';
 import type { IHttpLogInfo } from '../withLogging';
 
 describe('withLogging', () => {
-  let log: ReturnType<typeof vi.fn>;
+  let log: ReturnType<typeof vi.fn<(info: IHttpLogInfo) => void>>;
   let inner: IHttpFn;
   const parse = (d: unknown) => d;
 
   beforeEach(() => {
-    log = vi.fn();
+    log = vi.fn<(info: IHttpLogInfo) => void>();
   });
 
   describe('success path', () => {
