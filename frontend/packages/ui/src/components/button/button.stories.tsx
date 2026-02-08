@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { fn } from 'storybook/test'
+import { Logo } from '../logo'
 import { Button } from './button'
 
 const meta = {
@@ -14,7 +15,7 @@ const meta = {
     },
     variant: {
       control: 'select',
-      options: ['surface', 'success'],
+      options: ['surface', 'success', 'successFilled', 'errorFilled'],
       description: 'Вариант фона',
     },
     rounded: {
@@ -68,11 +69,18 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const ButtonStory: Story = {
+export const Default: Story = {
   args: {
     children: 'Йа Кнопко',
     type: 'button',
-    disabled: false,
+  },
+}
+
+export const Disabled: Story = {
+  args: {
+    children: 'Йа Кнопко',
+    type: 'button',
+    disabled: true,
   },
 }
 
@@ -83,9 +91,23 @@ export const Success: Story = {
   },
 }
 
+export const SuccessFilled: Story = {
+  args: {
+    children: 'Успех',
+    variant: 'successFilled',
+  },
+}
+
+export const ErrorFilled: Story = {
+  args: {
+    children: 'Ошибка',
+    variant: 'errorFilled',
+  },
+}
+
 const Slots = () => (
   <>
-    <Button.Left style={{ color: 'red' }}>{'<'}</Button.Left>
+    <Button.Left>{'<'}</Button.Left>
     <Button.Center>Кнопка</Button.Center>
     <Button.Right>{'>'}</Button.Right>
   </>
@@ -96,5 +118,68 @@ export const WithSlots: Story = {
     variant: 'surface',
     rounded: 'md',
     children: <Slots />,
+  },
+}
+
+export const Overflow: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: 250 }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    children: 'йа переполнилсо!'.repeat(10),
+  },
+}
+
+const OverflowSlots = () => (
+  <>
+    <Button.Left>{'<'}</Button.Left>
+    <Button.Center>{'йа переполнилсо!'.repeat(10)}</Button.Center>
+    <Button.Right>{'>'}</Button.Right>
+  </>
+)
+
+export const OverflowWithSlots: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: 250 }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    children: <OverflowSlots />,
+  },
+}
+
+const OverflowCenterSlots = () => (
+  <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <Button.Left style={{ flexShrink: 0 }}>{'<'}</Button.Left>
+    <Button.Center style={{ overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0 }}>
+      {'йа переполнилсо!'.repeat(10)}
+    </Button.Center>
+    <Button.Right style={{ flexShrink: 0 }}>{'>'}</Button.Right>
+  </span>
+)
+
+export const OverflowCenter: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ maxWidth: 250 }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    children: <OverflowCenterSlots />,
+  },
+}
+
+export const WithLogo: Story = {
+  args: {
+    children: <Logo width={100} height="auto" />,
   },
 }

@@ -7,4 +7,5 @@ export const container = style({
 
 export const logo = style({
   color: vars.color.text,
+  display: 'block',
 })
