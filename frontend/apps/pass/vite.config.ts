@@ -1,6 +1,7 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vitest/config'
 import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
+import svgr from 'vite-plugin-svgr'
 import react from '@vitejs/plugin-react'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
@@ -12,6 +13,9 @@ export default defineConfig({
   },
   plugins: [
     vanillaExtractPlugin(),
+    svgr({
+      exportAsDefault: true,
+    }),
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,

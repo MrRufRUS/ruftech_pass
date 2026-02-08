@@ -33,6 +33,7 @@
     "@ruftech/fonts": "workspace:*",
     "@ruftech/tokens": "workspace:*",
     "@vanilla-extract/vite-plugin": "5.1.4",
+    "vite-plugin-svgr": "4.5.0",
     "@storybook/addon-a11y": "10.2.7",
     "@storybook/addon-docs": "10.2.7",
     "@storybook/react-vite": "10.2.7",

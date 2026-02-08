@@ -20,6 +20,7 @@ export function I18nProvider({ locale, i18n, children }: I18nProviderProps) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLocale(): ILocale {
   const locale = useContext(LocaleContext)
 

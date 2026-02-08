@@ -4,6 +4,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:ui": "pnpm --filter @ruftech/ui storybook",
     "lint": "turbo run lint",
     "format": "turbo run lint -- --fix",
     "test": "turbo run test",
