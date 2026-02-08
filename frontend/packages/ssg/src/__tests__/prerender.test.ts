@@ -4,6 +4,7 @@ import { prerender } from '../prerender'
 
 vi.mock('node:fs')
 
+// CLAUDE-генерированное г для поднятия процента покрытия. Сам тест не нужен тут.
 const TEMPLATE = [
   '<!doctype html>',
   '<html lang="ru">',
@@ -45,9 +46,9 @@ describe('prerender', () => {
       serverEntry: '/fake/dist/server/entry-server.js',
     })
 
-    const calls = vi.mocked(fs.writeFileSync).mock.calls
+    const calls = vi.mocked(fs.writeFileSync).mock.calls as unknown[][]
     const spaCall = calls.find(
-      (c) => typeof c[0] === 'string' && c[0].endsWith('200.html'),
+      (c: unknown[]) => typeof c[0] === 'string' && c[0].endsWith('200.html'),
     )
     expect(spaCall).toBeDefined()
     expect(spaCall![1]).toContain('<html lang="ru">')
@@ -79,6 +80,24 @@ describe('prerender', () => {
     expect(mockGetMeta).toHaveBeenCalledWith('ru', 'about')
   })
 
+  it('cleans up server directory when it exists', async () => {
+    vi.mocked(fs.existsSync).mockImplementation(
+      (p: unknown) => typeof p === 'string' && p.endsWith('/server'),
+    )
+    vi.mocked(fs.rmSync).mockImplementation(() => {})
+
+    await prerender({
+      routes: ['/'],
+      distDir: '/fake/dist',
+      serverEntry: '/fake/dist/server/entry-server.js',
+    })
+
+    expect(vi.mocked(fs.rmSync)).toHaveBeenCalledWith(
+      '/fake/dist/server',
+      { recursive: true, force: true },
+    )
+  })
+
   it('injects rendered HTML with data-server-rendered', async () => {
     await prerender({
       routes: ['/'],
@@ -86,9 +105,9 @@ describe('prerender', () => {
       serverEntry: '/fake/dist/server/entry-server.js',
     })
 
-    const calls = vi.mocked(fs.writeFileSync).mock.calls
+    const calls = vi.mocked(fs.writeFileSync).mock.calls as unknown[][]
     const indexCall = calls.find(
-      (c) =>
+      (c: unknown[]) =>
         typeof c[0] === 'string'
         && c[0].endsWith('index.html')
         && !c[0].endsWith('200.html'),

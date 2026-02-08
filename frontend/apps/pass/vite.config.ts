@@ -26,6 +26,8 @@ export default defineConfig({
         'src/routeTree.gen.ts',
         'src/main.tsx',
         'src/entry-server.tsx',
+        'src/routes/**',
+        'src/**/*.d.ts',
         'src/**/*.stories.{ts,tsx}',
         'src/**/*.test.{ts,tsx}',
       ],
