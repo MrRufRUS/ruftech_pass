@@ -1,0 +1,52 @@
+{
+  "folders": [
+    {
+      "name": "🔐 App",
+      "path": "frontend/apps/pass"
+    },
+    {
+      "name": "🧩 ui",
+      "path": "frontend/packages/ui"
+    },
+    {
+      "name": "🎨 tokens",
+      "path": "frontend/packages/tokens"
+    },
+    {
+      "name": "🔤 fonts",
+      "path": "frontend/packages/fonts"
+    },
+    {
+      "name": "✏️ svg-generator",
+      "path": "frontend/packages/svg-generator"
+    },
+    {
+      "name": "🌐 http-client",
+      "path": "frontend/packages/http-client"
+    },
+    {
+      "name": "📋 logger",
+      "path": "frontend/packages/logger"
+    },
+    {
+      "name": "📄 ssg",
+      "path": "frontend/packages/ssg"
+    },
+    {
+      "name": "🧪 e2e",
+      "path": "frontend/packages/e2e"
+    },
+    {
+      "name": "⚙️ eslint-config",
+      "path": "frontend/packages/eslint-config"
+    },
+    {
+      "name": "⚙️ typescript-config",
+      "path": "frontend/packages/typescript-config"
+    },
+    {
+      "name": "📦 root",
+      "path": "./"
+    }
+  ]
+}
