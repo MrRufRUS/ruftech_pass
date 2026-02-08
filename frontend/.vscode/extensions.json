@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "stylelint.vscode-stylelint",
+    "dbaeumer.vscode-eslint",
+    "vunguyentuan.vscode-css-variables",
+    "ms-azuretools.vscode-docker",
+    "YoavBls.pretty-ts-errors",
+    "christian-kohler.npm-intellisense"
+  ]
+}

@@ -32,7 +32,7 @@ interface ServerEntry {
   getMeta(
     locale: string,
     pageKey: string,
-  ): { title: string; description: string }
+  ): { title: string, description: string }
 }
 
 function routeToPageKey(routePath: string): string {
@@ -77,8 +77,8 @@ export async function prerender(options: PrerenderOptions): Promise<void> {
   const server: ServerEntry = await import(serverEntry)
 
   // SPA fallback
-  const { title: defaultTitle, description: defaultDescription } =
-    server.getMeta(defaultLocale, 'home')
+  const { title: defaultTitle, description: defaultDescription }
+    = server.getMeta(defaultLocale, 'home')
 
   const spaFallback = injectMeta(template, {
     lang: defaultLocale,
@@ -114,8 +114,8 @@ export async function prerender(options: PrerenderOptions): Promise<void> {
         appHtml,
       })
 
-      const filePath =
-        url === '/'
+      const filePath
+        = url === '/'
           ? path.join(distDir, 'index.html')
           : path.join(
               distDir,

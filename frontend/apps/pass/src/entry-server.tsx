@@ -29,10 +29,10 @@ export async function render(url: string): Promise<string> {
 export function getMeta(
   locale: ILocale,
   pageKey: string,
-): { title: string; description: string } {
+): { title: string, description: string } {
   const meta = resources[locale]?.meta as Record<
     string,
-    { title: string; description: string }
+    { title: string, description: string }
   >
   return (
     meta[pageKey] ?? {

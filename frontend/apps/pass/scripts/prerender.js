@@ -1,8 +1,8 @@
-import { resolve } from 'node:path';
-import { prerender } from '@ruftech/ssg';
+import { resolve } from 'node:path'
+import { prerender } from '@ruftech/ssg'
 
-const distDir = resolve(import.meta.dirname, '..', 'dist');
-const serverEntry = resolve(distDir, 'server', 'entry-server.js');
+const distDir = resolve(import.meta.dirname, '..', 'dist')
+const serverEntry = resolve(distDir, 'server', 'entry-server.js')
 
 await prerender({
   routes: ['/'],
@@ -10,4 +10,4 @@ await prerender({
   serverEntry,
   locales: ['ru', 'en'],
   defaultLocale: 'ru',
-});
+})

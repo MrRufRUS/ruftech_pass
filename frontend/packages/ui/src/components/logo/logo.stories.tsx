@@ -1,17 +1,17 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Logo } from './logo';
+import type { Meta, StoryObj } from '@storybook/react-vite'
+import { Logo } from './logo'
 
 const meta = {
   component: Logo,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 } satisfies Meta<typeof Logo>
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof meta>
 
 export const LogoStory: Story = {
-  args: {}
+  args: {},
 }

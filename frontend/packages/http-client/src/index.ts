@@ -4,12 +4,12 @@ export type {
   IHttpFn,
   IHttpOptions,
   IHttpPlugin,
-} from './client';
-export { createHttpClient } from './client';
+} from './client'
+export { createHttpClient } from './client'
 
-export { DefaultHttpClient, HttpError } from './default';
+export { DefaultHttpClient, HttpError } from './default'
 
-export { withBaseURL } from './withBaseURL';
+export { withBaseURL } from './withBaseURL'
 
-export type { IHttpLogInfo, IHttpLogger, IHttpLogSanitizer, IWithLoggingOptions } from './withLogging';
-export { withLogging } from './withLogging';
+export type { IHttpLogInfo, IHttpLogger, IHttpLogSanitizer, IWithLoggingOptions } from './withLogging'
+export { withLogging } from './withLogging'

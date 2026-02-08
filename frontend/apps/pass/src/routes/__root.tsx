@@ -14,7 +14,6 @@ const httpClient = DefaultHttpClient
 
 export const Route = createRootRoute({ component: RootLayout })
 
-// eslint-disable-next-line react-refresh/only-export-components
 function RootLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const locale = detectLocale(pathname)
