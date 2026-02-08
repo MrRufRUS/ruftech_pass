@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
 
 import '@ruftech/fonts'
+import '@ruftech/tokens'
 
 import { routeTree } from './routeTree.gen'
 import { detectLocale } from '@/shared/i18n'

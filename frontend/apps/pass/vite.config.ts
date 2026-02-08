@@ -1,7 +1,8 @@
-import { resolve } from 'node:path';
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
-import { tanstackRouter } from '@tanstack/router-plugin/vite';
+import { resolve } from 'node:path'
+import { defineConfig } from 'vitest/config'
+import { vanillaExtractPlugin } from '@vanilla-extract/vite-plugin'
+import react from '@vitejs/plugin-react'
+import { tanstackRouter } from '@tanstack/router-plugin/vite'
 
 export default defineConfig({
   resolve: {
@@ -10,6 +11,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    vanillaExtractPlugin(),
     tanstackRouter({
       target: 'react',
       autoCodeSplitting: true,
@@ -35,4 +37,4 @@ export default defineConfig({
       reportsDirectory: './coverage',
     },
   },
-});
+})

@@ -1,7 +1,7 @@
 import type { IBaseWithChildrenProps } from "@/types";
 import type { FC } from "react";
 import clsx from "clsx";
-import Styles from './{{kebabCase component}}.module.css';
+import { container } from './{{kebabCase component}}.css';
 
 export type {{pascalCase component}}Props = IBaseWithChildrenProps & {};
 
@@ -10,6 +10,6 @@ export const {{pascalCase component}}: FC<{{pascalCase component}}Props> = ({
   style,
 }) => {
   return (
-    <div className={clsx(Styles.container, className)} style={style}></div>
+    <div className={clsx(container, className)} style={style}></div>
   );
 };

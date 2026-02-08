@@ -1,4 +1,6 @@
 import type { Preview } from '@storybook/react-vite'
+import '@ruftech/fonts'
+import '@ruftech/tokens'
 
 const preview: Preview = {
   parameters: {

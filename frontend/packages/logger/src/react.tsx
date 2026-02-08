@@ -17,6 +17,7 @@ export function LoggerProvider({ logger, children }: LoggerProviderProps) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLogger(): ILogger {
   const logger = useContext(LoggerContext)
 

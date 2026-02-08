@@ -1,0 +1,21 @@
+{
+  "name": "@ruftech/tokens",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@vanilla-extract/css": "1.18.0"
+  },
+  "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
+    "@ruftech/typescript-config": "workspace:*",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3"
+  }
+}

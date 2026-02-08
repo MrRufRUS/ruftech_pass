@@ -1,0 +1,5 @@
+{
+  "extends": "@ruftech/typescript-config/library.json",
+  "include": ["."],
+  "exclude": ["node_modules"]
+}

@@ -12,8 +12,8 @@ module.exports = (plop) => {
       const actions = [
         {
           type: "add",
-          path: "src/components/{{kebabCase component}}/{{kebabCase component}}.module.css",
-          templateFile: "_templates/components/styles.module.css.hbs",
+          path: "src/components/{{kebabCase component}}/{{kebabCase component}}.css.ts",
+          templateFile: "_templates/components/component.css.ts.hbs",
         },
         {
           type: "add",
