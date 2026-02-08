@@ -12,5 +12,5 @@ globalStyle(
 
 globalStyle('html', {
   font: vars.font.shorthand.regularText,
-  color: vars.color.foreground,
+  color: vars.color.text,
 })

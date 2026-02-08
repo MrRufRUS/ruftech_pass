@@ -1,7 +1,7 @@
 import { createThemeContract } from '@vanilla-extract/css'
 
 export const vars = createThemeContract({
-  color: {
+  palette: {
     greyBlack: null,
     greySelection: null,
     greyBorder: null,
@@ -13,9 +13,19 @@ export const vars = createThemeContract({
     blue: null,
     darkBlue: null,
     lightBlue: null,
-    foreground: null,
+  },
+  color: {
+    text: null,
+    textMuted: null,
     background: null,
-    borderColor: null,
+    surface: null,
+    border: null,
+    primary: null,
+    primaryHover: null,
+    primaryMuted: null,
+    success: null,
+    error: null,
+    warning: null,
   },
   font: {
     size: {

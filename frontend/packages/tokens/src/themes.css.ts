@@ -2,7 +2,7 @@ import { createGlobalTheme, globalStyle } from '@vanilla-extract/css'
 import { vars } from './contract.css'
 
 createGlobalTheme(':root', vars, {
-  color: {
+  palette: {
     greyBlack: '#333333',
     greySelection: '#3333331a',
     greyBorder: '#33333399',
@@ -14,9 +14,19 @@ createGlobalTheme(':root', vars, {
     blue: '#566ae4',
     darkBlue: '#3845cf',
     lightBlue: '#babde7',
-    foreground: '#333333',
+  },
+  color: {
+    text: '#333333',
+    textMuted: '#33333399',
     background: '#f1f1f1',
-    borderColor: '#f1f1f199',
+    surface: 'white',
+    border: '#f1f1f199',
+    primary: '#566ae4',
+    primaryHover: '#3845cf',
+    primaryMuted: '#babde7',
+    success: '#22c55e',
+    error: '#ef4444',
+    warning: '#f59e0b',
   },
   font: {
     size: {
@@ -64,9 +74,11 @@ globalStyle(':root', {
   '@media': {
     '(prefers-color-scheme: dark)': {
       vars: {
-        [vars.color.foreground]: vars.color.white,
-        [vars.color.background]: vars.color.greyBlack,
-        [vars.color.borderColor]: vars.color.greyBorder,
+        [vars.color.text]: vars.palette.white,
+        [vars.color.textMuted]: vars.palette.whiteSub,
+        [vars.color.background]: vars.palette.greyBlack,
+        [vars.color.surface]: '#3d3d3d',
+        [vars.color.border]: vars.palette.greyBorder,
       },
     },
   },

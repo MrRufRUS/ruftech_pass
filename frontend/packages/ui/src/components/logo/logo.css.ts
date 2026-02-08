@@ -6,5 +6,5 @@ export const container = style({
 })
 
 export const logo = style({
-  color: vars.color.black,
+  color: vars.color.text,
 })
