@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "exports": {
     ".": "./src/index.ts",
-    "./logo": "./src/components/logo/index.ts"
+    "./*": "./src/components/*/index.ts"
   },
   "license": "MIT",
   "scripts": {
@@ -30,20 +30,20 @@
     }
   },
   "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
     "@ruftech/fonts": "workspace:*",
     "@ruftech/tokens": "workspace:*",
-    "@vanilla-extract/vite-plugin": "5.1.4",
-    "vite-plugin-svgr": "4.5.0",
+    "@ruftech/typescript-config": "workspace:*",
     "@storybook/addon-a11y": "10.2.7",
     "@storybook/addon-docs": "10.2.7",
     "@storybook/react-vite": "10.2.7",
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.2",
-    "@ruftech/eslint-config": "workspace:*",
-    "@ruftech/typescript-config": "workspace:*",
+    "@vanilla-extract/vite-plugin": "5.1.4",
     "eslint": "9.39.2",
     "plop": "4.0.5",
     "storybook": "10.2.7",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "vite-plugin-svgr": "4.5.0"
   }
 }

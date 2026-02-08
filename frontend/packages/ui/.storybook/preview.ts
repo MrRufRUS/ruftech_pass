@@ -4,6 +4,7 @@ import '@ruftech/fonts'
 import '@ruftech/tokens'
 
 const preview: Preview = {
+  tags: ['autodocs'],
   globalTypes: {
     theme: {
       description: 'Theme',
