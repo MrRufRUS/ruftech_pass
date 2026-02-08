@@ -1,23 +1,53 @@
+import { useEffect } from 'react'
 import type { Preview } from '@storybook/react-vite'
 import '@ruftech/fonts'
 import '@ruftech/tokens'
 
 const preview: Preview = {
+  globalTypes: {
+    theme: {
+      description: 'Theme',
+      toolbar: {
+        title: 'Theme',
+        icon: 'mirror',
+        items: [
+          { value: 'auto', title: 'Auto' },
+          { value: 'light', title: 'Light' },
+          { value: 'dark', title: 'Dark' },
+        ],
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: {
+    theme: 'auto',
+  },
+  decorators: [
+    (Story, context) => {
+      const theme = context.globals.theme as string
+      useEffect(() => {
+        const root = document.documentElement
+        if (!theme || theme === 'auto') {
+          root.removeAttribute('data-theme')
+        } else {
+          root.dataset.theme = theme
+        }
+        return () => root.removeAttribute('data-theme')
+      }, [theme])
+      return Story()
+    },
+  ],
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
-
     a11y: {
-      // 'todo' - show a11y violations in the test UI only
-      // 'error' - fail CI on a11y violations
-      // 'off' - skip a11y checks entirely
-      test: 'todo'
-    }
+      test: 'todo',
+    },
   },
-};
+}
 
-export default preview;
+export default preview
