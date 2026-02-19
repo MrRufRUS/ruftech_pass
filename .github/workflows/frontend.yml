@@ -37,6 +37,8 @@ jobs:
   test:
     name: Тесты
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     defaults:
       run:
         working-directory: frontend
@@ -47,10 +49,14 @@ jobs:
 
       - name: Сводка покрытия
         if: always()
-        run: |
-          SUMMARY="$(node scripts/coverage-summary.js)"
-          echo "$SUMMARY"
-          echo "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
+        run: node scripts/coverage-summary.js
+
+      - name: Комментарий с покрытием в PR
+        if: always() && github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage
+          path: frontend/coverage-report.md
 
       - name: Загрузка отчёта о покрытии
         if: always()

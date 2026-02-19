@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
+const outFile = path.join(root, 'coverage-report.md')
 
 const dirs = [
   ...findDirs('packages'),
@@ -19,6 +20,12 @@ function findDirs(base) {
       file: path.join(dir, name, 'coverage', 'coverage-summary.json'),
     }))
     .filter((d) => fs.existsSync(d.file))
+}
+
+function badge(pct) {
+  if (pct >= 90) return `${pct}% :green_circle:`
+  if (pct >= 70) return `${pct}% :yellow_circle:`
+  return `${pct}% :red_circle:`
 }
 
 if (dirs.length === 0) {
@@ -38,14 +45,22 @@ const rows = dirs.map(({ label, file }) => {
   }
 })
 
-const lines = [
-  '## Покрытие тестами',
+const md = [
+  '### :test_tube: Покрытие тестами',
   '',
   '| Пакет | Строки | Ветви | Функции | Выражения |',
-  '|-------|--------|-------|---------|-----------|',
+  '| :--- | :---: | :---: | :---: | :---: |',
   ...rows.map((r) =>
-    `| ${r.label} | ${r.lines}% | ${r.branches}% | ${r.functions}% | ${r.statements}% |`,
+    `| **${r.label}** | ${badge(r.lines)} | ${badge(r.branches)} | ${badge(r.functions)} | ${badge(r.statements)} |`,
   ),
-]
+  '',
+  '> :green_circle: >= 90% &ensp; :yellow_circle: >= 70% &ensp; :red_circle: < 70%',
+].join('\n')
 
-console.log(lines.join('\n'))
+fs.writeFileSync(outFile, md + '\n')
+console.log(md)
+
+const summaryFile = process.env.GITHUB_STEP_SUMMARY
+if (summaryFile) {
+  fs.appendFileSync(summaryFile, md + '\n')
+}
