@@ -1,11 +1,11 @@
-name: 'Фронтенд CI'
+name: "Фронтенд CI"
 
 on:
   push:
-    branches: [master, frontend]
-    paths: ['frontend/**']
+    branches: [master]
+    paths: ["frontend/**"]
   pull_request:
-    paths: ['frontend/**']
+    paths: ["frontend/**"]
 
 concurrency:
   group: frontend-${{ github.ref }}
@@ -44,6 +44,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/frontend-setup
       - run: pnpm turbo test:coverage
+
+      - name: Сводка покрытия
+        if: always()
+        run: node scripts/coverage-summary.js >> "$GITHUB_STEP_SUMMARY"
 
       - name: Загрузка отчёта о покрытии
         if: always()

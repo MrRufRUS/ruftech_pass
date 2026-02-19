@@ -37,7 +37,7 @@ export default defineConfig({
         'src/**/*.stories.{ts,tsx}',
         'src/**/*.test.{ts,tsx}',
       ],
-      reporter: ['text', 'html', 'lcov', 'json'],
+      reporter: ['text', 'html', 'lcov', 'json', 'json-summary'],
       reportsDirectory: './coverage',
     },
   },
