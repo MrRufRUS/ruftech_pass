@@ -1,0 +1,19 @@
+name: Настройка фронтенда
+description: Установка Node.js, pnpm и зависимостей фронтенда
+
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 10.29.1
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: frontend/.nvmrc
+        cache: pnpm
+        cache-dependency-path: frontend/pnpm-lock.yaml
+
+    - run: pnpm install --frozen-lockfile
+      shell: bash
+      working-directory: frontend

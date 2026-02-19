@@ -87,4 +87,6 @@ export const vars = createThemeContract({
       uiMini: null,
     },
   },
+  padding: { xs: null, s: null, m: null, l: null, xl: null },
+  spacing: { xs: null, s: null, m: null, l: null, xl: null },
 })

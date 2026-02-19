@@ -1,0 +1,54 @@
+name: 'Фронтенд CI'
+
+on:
+  push:
+    branches: [master, frontend]
+    paths: ['frontend/**']
+  pull_request:
+    paths: ['frontend/**']
+
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Линтинг
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/frontend-setup
+      - run: pnpm turbo lint
+
+  build:
+    name: Сборка
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/frontend-setup
+      - run: pnpm turbo build
+
+  test:
+    name: Тесты
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/frontend-setup
+      - run: pnpm turbo test:coverage
+
+      - name: Загрузка отчёта о покрытии
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: frontend/**/coverage/
+          retention-days: 7

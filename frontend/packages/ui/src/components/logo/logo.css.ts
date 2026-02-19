@@ -2,7 +2,7 @@ import { style } from '@vanilla-extract/css'
 import { vars } from '@ruftech/tokens'
 
 export const container = style({
-  padding: 6,
+  padding: vars.padding.xs,
 })
 
 export const logo = style({

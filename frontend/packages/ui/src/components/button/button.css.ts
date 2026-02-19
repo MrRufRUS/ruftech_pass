@@ -5,7 +5,8 @@ export const base = style({
   display: 'inline-flex',
   alignItems: 'center',
   maxWidth: '100%',
-  padding: '8px 16px',
+  paddingBlock: vars.padding.s,
+  paddingInline: vars.padding.l,
   cursor: 'pointer',
   font: vars.font.shorthand.regularText,
   border: '1px solid transparent',
@@ -101,7 +102,7 @@ export const slot = style({
   color: 'currentColor',
   selectors: {
     '& + &': {
-      marginLeft: 8,
+      marginLeft: vars.spacing.s,
     },
   },
 })
