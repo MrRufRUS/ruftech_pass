@@ -47,7 +47,10 @@ jobs:
 
       - name: Сводка покрытия
         if: always()
-        run: node scripts/coverage-summary.js >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          SUMMARY="$(node scripts/coverage-summary.js)"
+          echo "$SUMMARY"
+          echo "$SUMMARY" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Загрузка отчёта о покрытии
         if: always()
