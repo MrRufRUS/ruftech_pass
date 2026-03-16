@@ -23,9 +23,9 @@ function findDirs(base) {
 }
 
 function badge(pct) {
-  if (pct >= 90) return `${pct}% :green_circle:`
-  if (pct >= 70) return `${pct}% :yellow_circle:`
-  return `${pct}% :red_circle:`
+  if (pct >= 90) return `${pct}% 🟢`
+  if (pct >= 70) return `${pct}% 🟡`
+  return `${pct}% 🔴`
 }
 
 if (dirs.length === 0) {
@@ -46,7 +46,7 @@ const rows = dirs.map(({ label, file }) => {
 })
 
 const md = [
-  '### :test_tube: Покрытие тестами',
+  '### 🧪 Покрытие тестами',
   '',
   '| Пакет | Строки | Ветви | Функции | Выражения |',
   '| :--- | :---: | :---: | :---: | :---: |',
@@ -54,7 +54,7 @@ const md = [
     `| **${r.label}** | ${badge(r.lines)} | ${badge(r.branches)} | ${badge(r.functions)} | ${badge(r.statements)} |`,
   ),
   '',
-  '> :green_circle: >= 90% &ensp; :yellow_circle: >= 70% &ensp; :red_circle: < 70%',
+  '> 🟢 >= 90% &ensp; 🟡 >= 70% &ensp; 🔴 < 70%',
 ].join('\n')
 
 fs.writeFileSync(outFile, md + '\n')
