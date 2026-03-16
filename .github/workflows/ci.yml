@@ -1,14 +1,12 @@
-name: "Фронтенд CI"
+name: CI
 
 on:
   push:
     branches: [master]
-    paths: ["frontend/**"]
   pull_request:
-    paths: ["frontend/**"]
 
 concurrency:
-  group: frontend-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -25,6 +23,7 @@ jobs:
 
   build:
     name: Сборка
+    needs: lint
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -36,6 +35,7 @@ jobs:
 
   test:
     name: Тесты
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
