@@ -1,35 +1,23 @@
-from fastapi import (
-    APIRouter,
-    Depends,
-    HTTPException,
-    status,
-    Form,
-    Response,
-    Request,
-)
-
-from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
-
-import jwt
-
 from typing import Annotated
 
+import jwt
 from core.config import settings
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
+from . import utils
 from .schemas import (
-    UserSchema,
+    TokenData,
+    TokenInfo,
     UserLoginSchema,
     UserMeSchema,
+    UserSchema,
     UserUpdateSchema,
-    TokenInfo,
-    TokenData,
 )
-from . import utils
 
 users_router = APIRouter(prefix="/jwt", tags=["users"])
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/v1/jwt/login/", auto_error=False)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/jwt/login/", auto_error=False)
 
 john = UserSchema(
     id=1, username="john", password=utils.hash_password("secret"), email="ex@ya.ru"
@@ -87,8 +75,7 @@ def validate_auth_user_by_token(
     user = users_db.get(token_data.username)
     if user is None:
         raise credentials_exception
-    user_me = UserMeSchema(
-        id=user.id, username=user.username, email=user.email)
+    user_me = UserMeSchema(id=user.id, username=user.username, email=user.email)
     return user_me
 
 
@@ -97,8 +84,7 @@ def auth_user_issue_jwt(
     response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
     user: UserSchema = validate_auth_user(
-        UserLoginSchema(username=form_data.username,
-                        password=form_data.password)
+        UserLoginSchema(username=form_data.username, password=form_data.password)
     )
     jwt_payload = {"sub": str(user.id), "username": user.username}
     token = utils.encode_jwt(jwt_payload)
@@ -169,7 +155,8 @@ def patch_current_user(
     user = users_db.get(current_user.username)
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
 
     update: dict = {}
     if payload.email is not None:
@@ -181,4 +168,6 @@ def patch_current_user(
     updated_user = user.model_copy(update=update) if update else user
     users_db[current_user.username] = updated_user
 
-    return UserMeSchema(id=updated_user.id, username=updated_user.username, email=updated_user.email)
+    return UserMeSchema(
+        id=updated_user.id, username=updated_user.username, email=updated_user.email
+    )

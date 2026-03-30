@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-
-from api.v1.users.router import validate_auth_user_by_token
 from api.v1.users import utils as users_utils
+from api.v1.users.router import validate_auth_user_by_token
 from api.v1.users.schemas import UserSchema
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from .schemas import (
     PasswordCreateSchema,
@@ -106,7 +105,9 @@ def patch_password(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
 
     new_service_name = (
-        payload.service_name if payload.service_name is not None else rec["service_name"]
+        payload.service_name
+        if payload.service_name is not None
+        else rec["service_name"]
     )
     new_service_url = (
         payload.service_url if payload.service_url is not None else rec["service_url"]
@@ -142,8 +143,6 @@ def patch_password(
     )
 
 
-
-
 @passwords_router.delete("/{password_id}")
 def delete_password(
     password_id: int,
@@ -156,4 +155,3 @@ def delete_password(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
     del passwords_db[password_id]
     return {"message": "Password record deleted"}
-

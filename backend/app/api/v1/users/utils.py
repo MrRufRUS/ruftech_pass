@@ -1,9 +1,7 @@
-import jwt
+from datetime import datetime, timedelta
+
 import bcrypt
-
-
-from datetime import timedelta, datetime
-
+import jwt
 from core.config import settings
 
 
