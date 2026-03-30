@@ -9,14 +9,21 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as LocaleDashboardRouteImport } from './routes/$locale/dashboard'
 import { Route as LocaleAuthRouteImport } from './routes/$locale/auth'
 import { Route as LocaleDashboardIndexRouteImport } from './routes/$locale/dashboard/index'
 
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -31,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
 } as any)
 const LocaleIndexRoute = LocaleIndexRouteImport.update({
   id: '/',
@@ -57,9 +69,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/$locale/auth': typeof LocaleAuthRoute
   '/$locale/dashboard': typeof LocaleDashboardRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/$locale/dashboard/': typeof LocaleDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -67,6 +81,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/$locale/auth': typeof LocaleAuthRoute
   '/$locale': typeof LocaleIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/$locale/dashboard': typeof LocaleDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -74,9 +89,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRouteWithChildren
   '/$locale/auth': typeof LocaleAuthRoute
   '/$locale/dashboard': typeof LocaleDashboardRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/$locale/dashboard/': typeof LocaleDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -85,20 +102,30 @@ export interface FileRouteTypes {
     | '/'
     | '/$locale'
     | '/auth'
+    | '/dashboard'
     | '/$locale/auth'
     | '/$locale/dashboard'
     | '/$locale/'
+    | '/dashboard/'
     | '/$locale/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/$locale/auth' | '/$locale' | '/$locale/dashboard'
+  to:
+    | '/'
+    | '/auth'
+    | '/$locale/auth'
+    | '/$locale'
+    | '/dashboard'
+    | '/$locale/dashboard'
   id:
     | '__root__'
     | '/'
     | '/$locale'
     | '/auth'
+    | '/dashboard'
     | '/$locale/auth'
     | '/$locale/dashboard'
     | '/$locale/'
+    | '/dashboard/'
     | '/$locale/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -106,10 +133,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -130,6 +165,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/$locale/': {
       id: '/$locale/'
@@ -190,10 +232,23 @@ const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
   LocaleRouteRouteChildren,
 )
 
+interface DashboardRouteChildren {
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  DashboardRoute: DashboardRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

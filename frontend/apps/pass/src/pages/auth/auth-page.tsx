@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { LoginRequest, ApiError } from '@ruftech/api'
 import { HttpError } from '@ruftech/http-client'
 import { useHttpClient } from '@ruftech/http-client/react'
@@ -11,6 +11,7 @@ import { Alert } from '@ruftech/ui/alert'
 import { Heading } from '@ruftech/ui/heading'
 import { Logo } from '@ruftech/ui/logo'
 import { Spinner } from '@ruftech/ui/spinner'
+import { DEFAULT_LOCALE, detectLocale } from '@/shared/i18n'
 import { useDocumentMeta } from '@/shared/i18n'
 import { login } from '@/shared/auth'
 import * as s from './auth-page.css'
@@ -27,6 +28,8 @@ export function AuthPage() {
 
   const { t } = useTranslation('auth')
   const navigate = useNavigate()
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const locale = detectLocale(pathname)
   const client = useHttpClient()
 
   const [formState, setFormState] = useState<FormState>('idle')
@@ -63,7 +66,11 @@ export function AuthPage() {
 
     try {
       await login(client, result.data)
-      navigate({ to: '/' })
+      if (locale === DEFAULT_LOCALE) {
+        navigate({ to: '/dashboard/' })
+      } else {
+        navigate({ to: '/$locale/dashboard/', params: { locale } })
+      }
     } catch (err) {
       setFormState('error')
 

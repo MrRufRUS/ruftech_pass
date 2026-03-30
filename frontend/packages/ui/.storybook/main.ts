@@ -20,6 +20,17 @@ const config: StorybookConfig = {
         exportAsDefault: true,
       }),
     )
+    config.server ??= {}
+    config.server.proxy ??= {}
+    config.server.proxy['/api'] = {
+      target: 'http://localhost:8000',
+      changeOrigin: true,
+    }
+    config.server.proxy['/v1'] = {
+      target: 'http://localhost:8000',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/v1/, '/api/v1'),
+    }
     return config
   },
 }

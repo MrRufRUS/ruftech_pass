@@ -32,3 +32,13 @@ test('error alert is dismissible', async ({ page }) => {
   await page.locator('[role="alert"] button').click();
   await expect(page.locator('[role="alert"]')).not.toBeVisible();
 });
+
+test('successful login redirects to dashboard', async ({ page }) => {
+  await page.goto('/auth');
+  await page.locator('input[name="username"]').fill('john');
+  await page.locator('input[name="password"]').fill('secret');
+  await page.locator('button[type="submit"]').click();
+
+  await page.waitForURL(/\/dashboard\/?$/);
+  await expect(page.locator('h1')).toContainText('Менеджер паролей');
+});
