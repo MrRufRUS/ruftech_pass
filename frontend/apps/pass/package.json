@@ -12,9 +12,10 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@ruftech/api": "workspace:*",
     "@ruftech/fonts": "workspace:*",
-    "@ruftech/icons": "workspace:*",
     "@ruftech/http-client": "workspace:*",
+    "@ruftech/icons": "workspace:*",
     "@ruftech/logger": "workspace:*",
     "@ruftech/tokens": "workspace:*",
     "@ruftech/ui": "workspace:*",

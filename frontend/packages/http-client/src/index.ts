@@ -13,3 +13,5 @@ export { withBaseURL } from './withBaseURL'
 
 export type { IHttpLogInfo, IHttpLogger, IHttpLogSanitizer, IWithLoggingOptions } from './withLogging'
 export { withLogging } from './withLogging'
+
+export { withCredentials } from './withCredentials'

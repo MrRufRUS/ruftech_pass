@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { createRootRoute, Outlet, useRouterState } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-import { DefaultHttpClient, withLogging } from '@ruftech/http-client'
+import { DefaultHttpClient, withCredentials, withLogging } from '@ruftech/http-client'
 import { HttpClientProvider } from '@ruftech/http-client/react'
 import { DefaultLogger } from '@ruftech/logger'
 import { LoggerProvider } from '@ruftech/logger/react'
@@ -10,6 +10,7 @@ import { DefaultI18n, I18nProvider, detectLocale } from '@/shared/i18n'
 const logger = DefaultLogger.create()
 const httpClient = DefaultHttpClient
   .create(globalThis.fetch.bind(globalThis))
+  .applyPlugin(withCredentials())
   .applyPlugin(withLogging((info) => logger.log(info.error ? 'error' : 'info', info)))
 
 export const Route = createRootRoute({ component: RootLayout })

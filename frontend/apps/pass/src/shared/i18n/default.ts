@@ -16,7 +16,7 @@ export const DefaultI18n: {
     instance.use(initReactI18next).init({
       lng: locale,
       defaultNS: 'common',
-      ns: ['common', 'home', 'meta'],
+      ns: ['common', 'home', 'meta', 'auth'],
       resources,
       interpolation: { escapeValue: false },
       react: { useSuspense: false },

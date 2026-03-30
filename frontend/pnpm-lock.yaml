@@ -26,6 +26,9 @@ importers:
 
   apps/pass:
     dependencies:
+      '@ruftech/api':
+        specifier: workspace:*
+        version: link:../../packages/api
       '@ruftech/fonts':
         specifier: workspace:*
         version: link:../../packages/fonts
