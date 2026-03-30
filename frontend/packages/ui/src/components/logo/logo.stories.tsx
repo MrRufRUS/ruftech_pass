@@ -15,3 +15,11 @@ type Story = StoryObj<typeof meta>
 export const LogoStory: Story = {
   args: {},
 }
+
+export const Small: Story = {
+  args: { width: 50 },
+}
+
+export const Large: Story = {
+  args: { width: 300 },
+}

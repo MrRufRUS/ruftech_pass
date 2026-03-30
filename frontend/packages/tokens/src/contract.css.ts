@@ -46,6 +46,10 @@ export const vars = createThemeContract({
     warning: null,
     warningHover: null,
     warningPressed: null,
+    borderSubtle: null,
+    surfaceSubtle: null,
+    logoBg: null,
+    backgroundDark: null,
   },
   font: {
     size: {
@@ -87,6 +91,31 @@ export const vars = createThemeContract({
       uiMini: null,
     },
   },
-  padding: { xs: null, s: null, m: null, l: null, xl: null },
-  spacing: { xs: null, s: null, m: null, l: null, xl: null },
+  padding: { xs: null, s: null, m: null, l: null, xl: null, xxl: null },
+  spacing: { xs: null, s: null, m: null, l: null, xl: null, xxl: null },
+  icon: {
+    size: {
+      xs: null,
+      s: null,
+      m: null,
+      l: null,
+      xl: null,
+    },
+  },
+  radii: { xs: null, s: null, m: null, l: null, full: null, pill: null },
+  transition: {
+    duration: {
+      extraFast: null,
+      fast: null,
+      base: null,
+      slow: null,
+      xSlow: null,
+    },
+    easing: {
+      base: null,
+      in: null,
+      out: null,
+      inOut: null,
+    },
+  },
 })

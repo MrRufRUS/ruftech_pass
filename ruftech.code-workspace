@@ -33,6 +33,10 @@
       "path": "frontend/packages/ssg"
     },
     {
+      "name": "🛠️ helpers",
+      "path": "frontend/packages/helpers"
+    },
+    {
       "name": "🧪 e2e",
       "path": "frontend/packages/e2e"
     },

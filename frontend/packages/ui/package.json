@@ -13,6 +13,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@ruftech/icons": "workspace:*",
     "@ruftech/tokens": "workspace:*",
     "@vanilla-extract/css": "1.18.0",
     "clsx": "2.1.1"

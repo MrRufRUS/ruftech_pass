@@ -30,7 +30,7 @@ createGlobalTheme(':root', vars.font, {
     smallerText: `normal ${fw.mono.regular} ${sz.smallerText} / 1.55 ${ff.mono}`,
     altSmallerText: `normal ${fw.sans.medium} ${sz.altSmallerText} / 1 ${ff.sans}`,
     uiCaps: `normal ${fw.mono.regular} ${sz.uiCaps} / 1.55 ${ff.mono}`,
-    uiMini: `normal ${fw.mono.regular} ${sz.uiMini} / 1.55 ${ff.mono}`,
+    uiMini: `normal 100 ${sz.uiMini} / 1.55 ${ff.mono}`,
     uiRegular: `normal ${fw.mono.regular} ${sz.uiRegular} / 1.55 ${ff.mono}`,
     uiMedium: `normal ${fw.sans.medium} ${sz.uiMedium} / 1 ${ff.sans}`,
   },

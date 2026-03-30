@@ -1,0 +1,19 @@
+{
+  "name": "@ruftech/helpers",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
+    "@ruftech/typescript-config": "workspace:*",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3"
+  }
+}

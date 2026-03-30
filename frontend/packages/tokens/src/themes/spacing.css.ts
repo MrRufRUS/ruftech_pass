@@ -7,7 +7,8 @@ const scale = {
   s: '8px',
   m: '12px',
   l: '16px',
-  xl: '24px',
+  xl: '20px',
+  xxl: '24px',
 }
 
 createGlobalTheme(':root', vars.padding, scale)
@@ -22,16 +23,16 @@ globalStyle(':root', {
       vars: {
         [pd.m]: '16px',
         [pd.l]: '24px',
-        [pd.xl]: '32px',
+        [pd.xxl]: '32px',
         [sp.m]: '16px',
         [sp.l]: '24px',
-        [sp.xl]: '32px',
+        [sp.xxl]: '32px',
       },
     },
     [media.desktopLarge]: {
       vars: {
-        [pd.xl]: '40px',
-        [sp.xl]: '40px',
+        [pd.xxl]: '40px',
+        [sp.xxl]: '40px',
       },
     },
   },

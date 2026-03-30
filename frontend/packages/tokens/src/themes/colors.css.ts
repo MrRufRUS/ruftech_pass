@@ -22,6 +22,10 @@ const light = {
   warning: p.amber,
   warningHover: p.darkAmber,
   warningPressed: p.deepAmber,
+  borderSubtle: 'rgba(51,51,51,0.3)',
+  surfaceSubtle: 'rgba(51,51,51,0.1)',
+  logoBg: p.greyBlack,
+  backgroundDark: p.black,
 } as const
 
 const dark = {
@@ -43,6 +47,10 @@ const dark = {
   warning: p.brightAmber,
   warningHover: p.amber,
   warningPressed: p.darkAmber,
+  borderSubtle: 'rgba(255,255,255,0.3)',
+  surfaceSubtle: 'rgba(255,255,255,0.1)',
+  logoBg: p.darkBlue,
+  backgroundDark: p.white,
 } as const
 
 type ColorKey = keyof typeof vars.color
