@@ -10,8 +10,8 @@ origins = ["http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credantials=True,
+    allow_credentials=True,
     allow_methods=["*"],
-    allowd_headers=["*"],
+    allow_headers=["*"],
 )
 app.include_router(api_v1_router, prefix=settings.api_v1_prefix)
