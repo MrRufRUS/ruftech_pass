@@ -1,0 +1,52 @@
+{
+  "title": "Password Manager",
+  "addPassword": "Add Password",
+  "empty": {
+    "title": "No saved passwords",
+    "description": "Add your first password to get started"
+  },
+  "loading": "Loading...",
+  "fields": {
+    "serviceName": "Service Name",
+    "serviceUrl": "Service URL",
+    "login": "Login",
+    "password": "Password"
+  },
+  "placeholders": {
+    "serviceName": "e.g. GitHub",
+    "serviceUrl": "https://github.com",
+    "login": "Enter login",
+    "password": "Enter password"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copy": "Copy",
+    "copied": "Copied",
+    "close": "Close",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
+  },
+  "create": {
+    "title": "New Password"
+  },
+  "edit": {
+    "title": "Edit Password"
+  },
+  "detail": {
+    "title": "Password Details"
+  },
+  "delete": {
+    "title": "Delete Password",
+    "confirm": "Are you sure you want to delete \"{{name}}\"?"
+  },
+  "errors": {
+    "duplicate": "An entry with this name already exists",
+    "notFound": "Entry not found",
+    "network": "Network error. Try again later.",
+    "required": "Required field",
+    "invalidUrl": "Invalid URL"
+  }
+}

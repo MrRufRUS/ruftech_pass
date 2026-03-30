@@ -13,7 +13,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
+import { Route as LocaleDashboardRouteImport } from './routes/$locale/dashboard'
 import { Route as LocaleAuthRouteImport } from './routes/$locale/auth'
+import { Route as LocaleDashboardIndexRouteImport } from './routes/$locale/dashboard/index'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -35,10 +37,20 @@ const LocaleIndexRoute = LocaleIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
+const LocaleDashboardRoute = LocaleDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
 const LocaleAuthRoute = LocaleAuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleDashboardIndexRoute = LocaleDashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LocaleDashboardRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -46,13 +58,16 @@ export interface FileRoutesByFullPath {
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/$locale/auth': typeof LocaleAuthRoute
+  '/$locale/dashboard': typeof LocaleDashboardRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/dashboard/': typeof LocaleDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/$locale/auth': typeof LocaleAuthRoute
   '/$locale': typeof LocaleIndexRoute
+  '/$locale/dashboard': typeof LocaleDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -60,14 +75,31 @@ export interface FileRoutesById {
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/$locale/auth': typeof LocaleAuthRoute
+  '/$locale/dashboard': typeof LocaleDashboardRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/dashboard/': typeof LocaleDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$locale' | '/auth' | '/$locale/auth' | '/$locale/'
+  fullPaths:
+    | '/'
+    | '/$locale'
+    | '/auth'
+    | '/$locale/auth'
+    | '/$locale/dashboard'
+    | '/$locale/'
+    | '/$locale/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/$locale/auth' | '/$locale'
-  id: '__root__' | '/' | '/$locale' | '/auth' | '/$locale/auth' | '/$locale/'
+  to: '/' | '/auth' | '/$locale/auth' | '/$locale' | '/$locale/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/$locale'
+    | '/auth'
+    | '/$locale/auth'
+    | '/$locale/dashboard'
+    | '/$locale/'
+    | '/$locale/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -106,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleIndexRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/$locale/dashboard': {
+      id: '/$locale/dashboard'
+      path: '/dashboard'
+      fullPath: '/$locale/dashboard'
+      preLoaderRoute: typeof LocaleDashboardRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/$locale/auth': {
       id: '/$locale/auth'
       path: '/auth'
@@ -113,16 +152,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleAuthRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/$locale/dashboard/': {
+      id: '/$locale/dashboard/'
+      path: '/'
+      fullPath: '/$locale/dashboard/'
+      preLoaderRoute: typeof LocaleDashboardIndexRouteImport
+      parentRoute: typeof LocaleDashboardRoute
+    }
   }
 }
 
+interface LocaleDashboardRouteChildren {
+  LocaleDashboardIndexRoute: typeof LocaleDashboardIndexRoute
+}
+
+const LocaleDashboardRouteChildren: LocaleDashboardRouteChildren = {
+  LocaleDashboardIndexRoute: LocaleDashboardIndexRoute,
+}
+
+const LocaleDashboardRouteWithChildren = LocaleDashboardRoute._addFileChildren(
+  LocaleDashboardRouteChildren,
+)
+
 interface LocaleRouteRouteChildren {
   LocaleAuthRoute: typeof LocaleAuthRoute
+  LocaleDashboardRoute: typeof LocaleDashboardRouteWithChildren
   LocaleIndexRoute: typeof LocaleIndexRoute
 }
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAuthRoute: LocaleAuthRoute,
+  LocaleDashboardRoute: LocaleDashboardRouteWithChildren,
   LocaleIndexRoute: LocaleIndexRoute,
 }
 

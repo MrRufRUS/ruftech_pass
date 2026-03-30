@@ -1,0 +1,52 @@
+{
+  "title": "Менеджер паролей",
+  "addPassword": "Добавить пароль",
+  "empty": {
+    "title": "Нет сохранённых паролей",
+    "description": "Добавьте первый пароль, чтобы начать"
+  },
+  "loading": "Загрузка...",
+  "fields": {
+    "serviceName": "Название сервиса",
+    "serviceUrl": "URL сервиса",
+    "login": "Логин",
+    "password": "Пароль"
+  },
+  "placeholders": {
+    "serviceName": "Например: GitHub",
+    "serviceUrl": "https://github.com",
+    "login": "Введите логин",
+    "password": "Введите пароль"
+  },
+  "actions": {
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "copy": "Скопировать",
+    "copied": "Скопировано",
+    "close": "Закрыть",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль"
+  },
+  "create": {
+    "title": "Новый пароль"
+  },
+  "edit": {
+    "title": "Редактирование"
+  },
+  "detail": {
+    "title": "Детали пароля"
+  },
+  "delete": {
+    "title": "Удаление",
+    "confirm": "Вы уверены, что хотите удалить запись «{{name}}»?"
+  },
+  "errors": {
+    "duplicate": "Запись с таким именем уже существует",
+    "notFound": "Запись не найдена",
+    "network": "Ошибка сети. Попробуйте позже.",
+    "required": "Обязательное поле",
+    "invalidUrl": "Некорректный URL"
+  }
+}
