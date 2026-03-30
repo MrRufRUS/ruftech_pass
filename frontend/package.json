@@ -10,7 +10,7 @@
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
     "test:e2e": "pnpm --filter @ruftech/e2e test",
-    "test:e2e:coverage": "pnpm --filter @ruftech/e2e test:coverage",
+    "test:e2e:coverage": "pnpm --filter @ruftech/e2e e2e:coverage",
     "coverage:merge": "node scripts/merge-coverage.js",
     "coverage:all": "pnpm test:coverage && pnpm test:e2e:coverage && pnpm coverage:merge",
     "generate:svg": "pnpm --filter @ruftech/svg-generator generate 'RUFTECH PASS'",
