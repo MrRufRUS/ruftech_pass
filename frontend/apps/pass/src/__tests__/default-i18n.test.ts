@@ -31,7 +31,7 @@ describe('DefaultI18n', () => {
 
   it('translates a key from the home namespace', () => {
     const i18n = DefaultI18n.create('ru')
-    const title = i18n.t('title', { ns: 'home' })
+    const title = i18n.t('hero.title', { ns: 'home' })
 
     expect(title).toBeTruthy()
     expect(title).not.toBe('title')

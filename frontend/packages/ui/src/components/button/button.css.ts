@@ -4,6 +4,8 @@ import { vars } from '@ruftech/tokens'
 export const base = style({
   display: 'inline-flex',
   alignItems: 'center',
+  justifyContent: 'center',
+  textAlign: 'center',
   maxWidth: '100%',
   paddingBlock: vars.padding.s,
   paddingInline: vars.padding.l,

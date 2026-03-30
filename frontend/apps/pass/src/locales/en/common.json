@@ -1,5 +1,8 @@
 {
   "nav": {
-    "home": "Home"
+    "home": "Home",
+    "features": "Features",
+    "about": "About",
+    "login": "Log In"
   }
 }
