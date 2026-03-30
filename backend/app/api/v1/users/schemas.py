@@ -21,6 +21,11 @@ class UserMeSchema(BaseModel):
     email: EmailStr | None = None
 
 
+class UserUpdateSchema(BaseModel):
+    email: EmailStr | None = None
+    password: str | None = None
+
+
 class UserLoginSchema(BaseModel):
     username: str
     password: str

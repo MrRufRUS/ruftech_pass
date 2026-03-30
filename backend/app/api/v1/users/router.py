@@ -16,12 +16,20 @@ from typing import Annotated
 
 from core.config import settings
 
-from .schemas import UserSchema, UserLoginSchema, UserMeSchema, TokenInfo, TokenData
+from .schemas import (
+    UserSchema,
+    UserLoginSchema,
+    UserMeSchema,
+    UserUpdateSchema,
+    TokenInfo,
+    TokenData,
+)
 from . import utils
 
 users_router = APIRouter(prefix="/jwt", tags=["users"])
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/jwt/login/", auto_error=False)
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/api/v1/jwt/login/", auto_error=False)
 
 john = UserSchema(
     id=1, username="john", password=utils.hash_password("secret"), email="ex@ya.ru"
@@ -79,7 +87,8 @@ def validate_auth_user_by_token(
     user = users_db.get(token_data.username)
     if user is None:
         raise credentials_exception
-    user_me = UserMeSchema(id=user.id, username=user.username, email=user.email)
+    user_me = UserMeSchema(
+        id=user.id, username=user.username, email=user.email)
     return user_me
 
 
@@ -88,7 +97,8 @@ def auth_user_issue_jwt(
     response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ):
     user: UserSchema = validate_auth_user(
-        UserLoginSchema(username=form_data.username, password=form_data.password)
+        UserLoginSchema(username=form_data.username,
+                        password=form_data.password)
     )
     jwt_payload = {"sub": str(user.id), "username": user.username}
     token = utils.encode_jwt(jwt_payload)
@@ -133,7 +143,7 @@ def logout(
     return {"message": "Logged out"}
 
 
-@users_router.post("/delete/")
+@users_router.delete("/delete/")
 def delete_user(
     response: Response,
     current_user: Annotated[UserSchema, Depends(validate_auth_user_by_token)],
@@ -148,3 +158,27 @@ def get_current_user(
     current_user: Annotated[UserMeSchema, Depends(validate_auth_user_by_token)],
 ):
     return current_user
+
+
+@users_router.patch("/me/", response_model=UserMeSchema)
+def patch_current_user(
+    payload: UserUpdateSchema,
+    response: Response,
+    current_user: Annotated[UserSchema, Depends(validate_auth_user_by_token)],
+):
+    user = users_db.get(current_user.username)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    update: dict = {}
+    if payload.email is not None:
+        update["email"] = payload.email
+    if payload.password is not None:
+        update["password"] = utils.hash_password(payload.password)
+        response.delete_cookie(key="access_token")
+
+    updated_user = user.model_copy(update=update) if update else user
+    users_db[current_user.username] = updated_user
+
+    return UserMeSchema(id=updated_user.id, username=updated_user.username, email=updated_user.email)
