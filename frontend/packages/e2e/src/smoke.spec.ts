@@ -7,7 +7,7 @@ test('/ loads with Russian title', async ({ page }) => {
 
 test('/en/ loads with English title', async ({ page }) => {
   await page.goto('/en/');
-  await expect(page.locator('h1')).toContainText('Home');
+  await expect(page.locator('h1')).toContainText('RufTECH Pass');
 });
 
 test('/ru/ redirects to /', async ({ page }) => {
