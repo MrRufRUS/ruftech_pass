@@ -1,7 +1,6 @@
 from fastapi import FastAPI
-from app.routers.user import router as user_router
+from api.v1 import router as api_v1_router
+from core.config import settings
 
-app = FastAPI(openapi_prefix="/api/v1")
-
-app.include_router(user_router)
-
+app = FastAPI()
+app.include_router(api_v1_router, prefix=settings.api_v1_prefix)
