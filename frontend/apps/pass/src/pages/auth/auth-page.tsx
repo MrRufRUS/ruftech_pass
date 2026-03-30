@@ -67,9 +67,9 @@ export function AuthPage() {
     try {
       await login(client, result.data)
       if (locale === DEFAULT_LOCALE) {
-        navigate({ to: '/dashboard/' })
+        navigate({ to: '/dashboard' })
       } else {
-        navigate({ to: '/$locale/dashboard/', params: { locale } })
+        navigate({ to: '/$locale/dashboard', params: { locale } })
       }
     } catch (err) {
       setFormState('error')
