@@ -93,7 +93,7 @@ def auth_user_issue_jwt(
 
 
 @users_router.post("/signup/", status_code=status.HTTP_201_CREATED)
-def create_user_and_issue_jwt(
+def create_user(
     response: Response,
     username: str = Form(...),
     password: str = Form(...),
@@ -103,6 +103,10 @@ def create_user_and_issue_jwt(
     if db.query(User).filter(User.username == username).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists"
+        )
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists"
         )
     new_user = User(
         username=username,
