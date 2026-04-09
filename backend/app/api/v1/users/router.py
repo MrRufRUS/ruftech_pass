@@ -22,16 +22,6 @@ users_router = APIRouter(prefix="/jwt", tags=["users"])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/jwt/login/", auto_error=False)
 
-john = UserSchema(
-    id=1, username="john", password=utils.hash_password("secret"), email="ex@ya.ru"
-)
-bob = UserSchema(
-    id=2, username="bob", password=utils.hash_password("bobdebob"), email="bob@ya.ru"
-)
-
-
-users_db: dict[str, UserSchema] = {john.username: john, bob.username: bob}
-
 
 def validate_auth_user(user_login: UserLoginSchema, db: Session) -> UserSchema:
     username = user_login.username
@@ -55,6 +45,7 @@ def validate_auth_user(user_login: UserLoginSchema, db: Session) -> UserSchema:
 def validate_auth_user_by_token(
     request: Request,
     token: Annotated[str | None, Depends(oauth2_scheme)],
+    db: Session = Depends(get_db),
 ):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -74,7 +65,7 @@ def validate_auth_user_by_token(
         token_data = TokenData(username=username)
     except jwt.InvalidTokenError:
         raise credentials_exception
-    user = users_db.get(token_data.username)
+    user = db.query(User).filter(User.username == token_data.username).first()
     if user is None:
         raise credentials_exception
     user_me = UserMeSchema(id=user.id, username=user.username, email=user.email)
@@ -138,8 +129,15 @@ def logout(
 def delete_user(
     response: Response,
     current_user: Annotated[UserSchema, Depends(validate_auth_user_by_token)],
+    db: Session = Depends(get_db),
 ):
-    del users_db[current_user.username]
+    db_user = db.query(User).filter(User.username == current_user.username).first()
+    if db_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
+    db.delete(db_user)
+    db.commit()
     response.delete_cookie(key="access_token")
     return {"message": "User deleted"}
 
@@ -156,23 +154,20 @@ def patch_current_user(
     payload: UserUpdateSchema,
     response: Response,
     current_user: Annotated[UserSchema, Depends(validate_auth_user_by_token)],
+    db: Session = Depends(get_db),
 ):
-    user = users_db.get(current_user.username)
+    user = db.query(User).filter(User.username == current_user.username).first()
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
         )
 
-    update: dict = {}
     if payload.email is not None:
-        update["email"] = payload.email
+        user.email = payload.email
     if payload.password is not None:
-        update["password"] = utils.hash_password(payload.password)
+        user.password_hash = utils.hash_password(payload.password)
         response.delete_cookie(key="access_token")
 
-    updated_user = user.model_copy(update=update) if update else user
-    users_db[current_user.username] = updated_user
-
-    return UserMeSchema(
-        id=updated_user.id, username=updated_user.username, email=updated_user.email
-    )
+    db.commit()
+    db.refresh(user)
+    return UserMeSchema(id=user.id, username=user.username, email=user.email)
