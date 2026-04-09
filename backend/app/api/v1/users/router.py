@@ -2,11 +2,11 @@ from typing import Annotated
 
 import jwt
 from core.config import settings
+from db.depedency import get_db
+from db.models import User
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from db.depedency import get_db
-from db.models import User
 
 from . import utils
 from .schemas import (
@@ -33,7 +33,7 @@ bob = UserSchema(
 users_db: dict[str, UserSchema] = {john.username: john, bob.username: bob}
 
 
-def validate_auth_user(user_login: UserLoginSchema):
+def validate_auth_user(user_login: UserLoginSchema, db: Session) -> UserSchema:
     username = user_login.username
     password = user_login.password
 
@@ -43,13 +43,12 @@ def validate_auth_user(user_login: UserLoginSchema):
         headers={"WWW-Authenticate": "Bearer"},
     )
 
-    user = users_db.get(username)
+    user = db.query(User).filter(User.username == username).first()
     if not user:
         raise unauthed_exception
 
-    if not utils.validate_password(password, user.password):
+    if not utils.validate_password(password, bytes.fromhex(user.password_hash[2:])):
         raise unauthed_exception
-
     return user
 
 
@@ -84,10 +83,12 @@ def validate_auth_user_by_token(
 
 @users_router.post("/login/", response_model=TokenInfo)
 def auth_user_issue_jwt(
-    response: Response, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    response: Response,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db),
 ):
     user: UserSchema = validate_auth_user(
-        UserLoginSchema(username=form_data.username, password=form_data.password)
+        UserLoginSchema(username=form_data.username, password=form_data.password), db
     )
     jwt_payload = {"sub": str(user.id), "username": user.username}
     token = utils.encode_jwt(jwt_payload)
@@ -106,7 +107,7 @@ def create_user_and_issue_jwt(
     username: str = Form(...),
     password: str = Form(...),
     email: str | None = Form(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     if db.query(User).filter(User.username == username).first():
         raise HTTPException(
