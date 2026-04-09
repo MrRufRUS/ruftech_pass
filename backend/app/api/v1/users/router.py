@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, 
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from db.depedency import get_db
+from db.models import User
 
 from . import utils
 from .schemas import (
@@ -107,18 +108,18 @@ def create_user_and_issue_jwt(
     email: str | None = Form(None),
     db: Session = Depends(get_db)
 ):
-    if username in users_db:
+    if db.query(User).filter(User.username == username).first():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Username already exists"
         )
-    user_id = max((user.id for user in users_db.values()), default=1) + 1
-    new_user = UserSchema(
-        id=user_id,
+    new_user = User(
         username=username,
-        password=utils.hash_password(password),
+        password_hash=utils.hash_password(password),
         email=email,
     )
-    users_db[username] = new_user
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
 
     return {"message": "User created"}
 
