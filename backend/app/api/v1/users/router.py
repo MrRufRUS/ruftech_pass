@@ -4,6 +4,8 @@ import jwt
 from core.config import settings
 from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+from db.depedency import get_db
 
 from . import utils
 from .schemas import (
@@ -103,6 +105,7 @@ def create_user_and_issue_jwt(
     username: str = Form(...),
     password: str = Form(...),
     email: str | None = Form(None),
+    db: Session = Depends(get_db)
 ):
     if username in users_db:
         raise HTTPException(
