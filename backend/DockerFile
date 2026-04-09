@@ -1,0 +1,12 @@
+FROM python:3.12.12
+
+WORKDIR /app
+
+COPY pyproject.toml .
+
+RUN python -m pip install --no-cache-dir uv
+RUN uv install
+
+COPY . .
+
+CMD ["python", "-m", "uvicorn", "main:app", "--host", "localhost", "--port", "8000"]
