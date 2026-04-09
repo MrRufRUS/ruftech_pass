@@ -1,10 +1,10 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from pydantic import BaseModel, ConfigDict
 
 
 class UserCreateSchema(BaseModel):
     username: str
     password: str
-    email: EmailStr | None = None
+    email: str | None = None
 
 
 class UserSchema(BaseModel):
@@ -12,17 +12,17 @@ class UserSchema(BaseModel):
     id: int
     username: str
     password: bytes
-    email: EmailStr | None = None
+    email: str | None = None
 
 
 class UserMeSchema(BaseModel):
     id: int
     username: str
-    email: EmailStr | None = None
+    email: str | None = None
 
 
 class UserUpdateSchema(BaseModel):
-    email: EmailStr | None = None
+    email: str | None = None
     password: str | None = None
 
 
