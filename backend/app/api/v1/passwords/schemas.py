@@ -11,6 +11,7 @@ class PasswordCreateSchema(BaseModel):
 class PasswordPublicSchema(BaseModel):
     id: int
     service_name: str
+    service_url: AnyHttpUrl | None = None
 
 
 class PasswordDetailSchema(BaseModel):
@@ -30,4 +31,5 @@ class PasswordUpdateSchema(BaseModel):
 
 class PasswordListQuery(BaseModel):
     service_name: str | None = None
+    service_url: AnyHttpUrl | None = None
     login: str | None = None

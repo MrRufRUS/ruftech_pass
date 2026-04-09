@@ -47,6 +47,7 @@ def create_password(
     password_record = Password(
         user_id=owner_id,
         service_name=payload.service_name,
+        service_url=payload.service_url,
         username=payload.login,
         encrypted_password=password_hash.decode("utf-8")
         if isinstance(password_hash, bytes)
@@ -75,6 +76,7 @@ def list_passwords(
         PasswordPublicSchema(
             id=rec.id,
             service_name=rec.service_name,
+            service_url=rec.service_url,
         )
         for rec in records
     ]
@@ -96,6 +98,7 @@ def get_password(
     return PasswordDetailSchema(
         id=rec.id,
         service_name=rec.service_name,
+        service_url=rec.service_url,
         login=rec.username,
         password_hash=rec.encrypted_password,
     )
@@ -119,6 +122,9 @@ def patch_password(
         payload.service_name if payload.service_name is not None else rec.service_name
     )
     new_login = payload.login if payload.login is not None else rec.username
+    new_service_url = (
+        payload.service_url if payload.service_url is not None else rec.service_url
+    )
 
     # Проверка на дубликат с новыми значениями
     existing = (
@@ -127,6 +133,7 @@ def patch_password(
             Password.user_id == current_user.id,
             Password.id != password_id,
             Password.service_name == new_service_name,
+            Password.service_url == new_service_url,
             Password.username == new_login,
         )
         .first()
@@ -155,6 +162,7 @@ def patch_password(
     return PasswordDetailSchema(
         id=rec.id,
         service_name=rec.service_name,
+        service_url=rec.service_url,
         login=rec.username,
         password_hash=rec.encrypted_password,
     )
