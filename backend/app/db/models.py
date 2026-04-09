@@ -34,6 +34,7 @@ class Password(Base):
         Integer, ForeignKey("users.id"), nullable=False
     )
     service_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    service_url: Mapped[str] = mapped_column(String(255), nullable=True)
     username: Mapped[str] = mapped_column(String(100), nullable=True)
     encrypted_password: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
