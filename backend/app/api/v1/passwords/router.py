@@ -43,15 +43,13 @@ def create_password(
             detail="Password record for this service/login already exists",
         )
 
-    password_hash = users_utils.hash_password(payload.password)
+    password_hash = users_utils.encrypt_password(payload.password)
     password_record = Password(
         user_id=owner_id,
         service_name=payload.service_name,
         service_url=payload.service_url,
         username=payload.login,
-        encrypted_password=password_hash.decode("utf-8")
-        if isinstance(password_hash, bytes)
-        else password_hash,
+        encrypted_password=password_hash,
     )
     db.add(password_record)
     db.commit()
@@ -60,8 +58,9 @@ def create_password(
     return PasswordDetailSchema(
         id=password_record.id,
         service_name=password_record.service_name,
+        service_url=password_record.service_url,
         login=password_record.username,
-        password_hash=password_record.encrypted_password,
+        password=password_record.encrypted_password,
     )
 
 
@@ -100,7 +99,7 @@ def get_password(
         service_name=rec.service_name,
         service_url=rec.service_url,
         login=rec.username,
-        password_hash=rec.encrypted_password,
+        password=users_utils.decrypt_password(rec.encrypted_password),
     )
 
 
@@ -125,6 +124,11 @@ def patch_password(
     new_service_url = (
         payload.service_url if payload.service_url is not None else rec.service_url
     )
+    new_password = (
+        payload.password
+        if payload.password is not None
+        else users_utils.decrypt_password(rec.encrypted_password)
+    )
 
     # Проверка на дубликат с новыми значениями
     existing = (
@@ -147,14 +151,8 @@ def patch_password(
 
     rec.service_name = new_service_name
     rec.username = new_login
-
-    if payload.password is not None:
-        password_hash = users_utils.hash_password(payload.password)
-        rec.encrypted_password = (
-            password_hash.decode("utf-8")
-            if isinstance(password_hash, bytes)
-            else password_hash
-        )
+    rec.service_url = new_service_url
+    rec.encrypted_password = users_utils.encrypt_password(new_password)
 
     db.commit()
     db.refresh(rec)
@@ -164,7 +162,7 @@ def patch_password(
         service_name=rec.service_name,
         service_url=rec.service_url,
         login=rec.username,
-        password_hash=rec.encrypted_password,
+        password=rec.encrypted_password,
     )
 
 

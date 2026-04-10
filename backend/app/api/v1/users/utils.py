@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 import bcrypt
 import jwt
 from core.config import settings
+from cryptography.fernet import Fernet
+
+cipher = Fernet(settings.PASSWORD_SECRET_KEY.encode())
 
 
 def encode_jwt(
@@ -40,3 +43,11 @@ def hash_password(password: str) -> bytes:
 
 def validate_password(password: str, hashed_password: bytes) -> bool:
     return bcrypt.checkpw(password.encode(), hashed_password)
+
+
+def encrypt_password(password: str) -> str:
+    return cipher.encrypt(password.encode()).decode()
+
+
+def decrypt_password(encrypted: str) -> str:
+    return cipher.decrypt(encrypted.encode()).decode()
