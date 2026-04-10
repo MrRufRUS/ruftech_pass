@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+PASSWORD_SECRET_KEY = os.getenv("PASSWORD_SECRET_KEY")
 
 
 class AuthJWT(BaseModel):
@@ -26,6 +27,10 @@ class Settings(BaseSettings):
     @property
     def DATABASE_URL(self) -> str:
         return DATABASE_URL
+
+    @property
+    def PASSWORD_SECRET_KEY(self) -> str:
+        return PASSWORD_SECRET_KEY
 
 
 settings = Settings()

@@ -19,7 +19,7 @@ class PasswordDetailSchema(BaseModel):
     service_name: str
     service_url: str | None = None
     login: str
-    password_hash: str
+    password: str
 
 
 class PasswordUpdateSchema(BaseModel):
