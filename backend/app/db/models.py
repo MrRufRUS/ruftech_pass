@@ -23,7 +23,9 @@ class User(Base):
     )
 
     # Relationships
-    passwords = relationship("Password", back_populates="user")
+    passwords = relationship(
+        "Password", back_populates="user", cascade="all, delete-orphan"
+    )
 
 
 class Password(Base):
