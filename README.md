@@ -4,14 +4,16 @@
 
 ## Документация
 
-| Документ | Описание |
-|---|---|
-| [docs/project-overview-pdr.md](docs/project-overview-pdr.md) | Обзор продукта, архитектура, ключевые компоненты |
+**[→ docs/README.md](docs/README.md)** — полный индекс документации.
+
+| Документ                                                   | Описание                                  |
+| ---------------------------------------------------------- | ----------------------------------------- |
+| [docs/frontend/README.md](docs/frontend/README.md)         | Фронтенд: монорепо, команды, архитектура  |
+| [docs/backend/README.md](docs/backend/README.md)           | Бэкенд: структура, API, миграции          |
+| [docs/ci-cd-guide.md](docs/ci-cd-guide.md)                 | CI-этапы, релиз, Docker Hub               |
+| [docs/testing-guide.md](docs/testing-guide.md)             | Как писать тесты (backend + frontend)     |
 | [docs/system-architecture.md](docs/system-architecture.md) | Диаграммы, слои приложения, потоки данных |
-| [docs/code-standards.md](docs/code-standards.md) | Стандарты кода и соглашения |
-| [docs/development-roadmap.md](docs/development-roadmap.md) | Дорожная карта и прогресс |
-| [docs/project-changelog.md](docs/project-changelog.md) | Журнал изменений |
-| [frontend/CLAUDE.md](frontend/CLAUDE.md) | Детальное руководство по монорепозиторию фронтенда |
+| [docs/code-standards.md](docs/code-standards.md)           | Стандарты кода и соглашения               |
 
 ## Структура проекта
 

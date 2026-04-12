@@ -1,8 +1,16 @@
 # Документация RufTECH Pass
 
-Полная документация проекта менеджера паролей RufTECH Pass.
+## Для разработчика
 
-## Структура документации
+| Документ | Описание |
+|----------|----------|
+| [frontend/README.md](./frontend/README.md) | Монорепо: структура, команды, архитектура, TypeScript, компоненты |
+| [backend/README.md](./backend/README.md) | FastAPI: структура, эндпоинты, модели, миграции, запуск |
+| [ci-cd-guide.md](./ci-cd-guide.md) | CI-этапы, релиз (release-please), Docker Hub, проверка локально |
+| [testing-guide.md](./testing-guide.md) | Как писать тесты: pytest (backend), Vitest + RTL + Playwright (frontend) |
+| [tests-overview.md](./tests-overview.md) | Справочник существующих тестов (306 тестов, 40 файлов) |
+
+## Вся документация
 
 ### 📋 [project-overview-pdr.md](./project-overview-pdr.md) (188 строк)
 
