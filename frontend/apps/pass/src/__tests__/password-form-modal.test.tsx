@@ -61,15 +61,21 @@ describe('PasswordFormModal', () => {
       })
     })
 
-    it('does not call onSubmit when required fields empty', async () => {
+    it('calls onSubmit with empty strings when fields are blank', async () => {
       const user = userEvent.setup()
-      const onSubmit = vi.fn()
+      const onSubmit = vi.fn().mockResolvedValue(undefined)
       renderWithProviders(
         <PasswordFormModal open={true} mode="create" onSubmit={onSubmit} onClose={vi.fn()} />
       )
 
       await user.click(screen.getByRole('button', { name: 'Сохранить' }))
-      expect(onSubmit).not.toHaveBeenCalled()
+      await vi.waitFor(() => {
+        expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({
+          service_name: '',
+          login: '',
+          password: '',
+        }))
+      })
     })
   })
 

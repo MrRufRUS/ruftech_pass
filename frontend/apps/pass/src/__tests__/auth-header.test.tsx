@@ -33,15 +33,14 @@ describe('AuthHeader', () => {
       expect(themeBtn.getAttribute('aria-label')).not.toBe(initialLabel)
     })
 
-    it('stores theme in localStorage', async () => {
+    it('stores theme preference in localStorage', async () => {
       const user = userEvent.setup()
-      const setSpy = vi.spyOn(Storage.prototype, 'setItem')
       renderWithProviders(<AuthHeader />)
 
       await user.click(screen.getByRole('button', { name: /theme/i }))
 
-      expect(setSpy).toHaveBeenCalledWith('theme', expect.stringMatching(/^(light|dark)$/))
-      setSpy.mockRestore()
+      // After toggle, a theme value should be stored
+      expect(localStorage.getItem('theme')).toMatch(/^(light|dark)$/)
     })
   })
 })

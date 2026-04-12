@@ -90,8 +90,9 @@ describe('PasswordList', () => {
       )
       await user.type(screen.getByRole('searchbox'), 'git')
       // GitHub and GitLab match, Google does not
-      expect(screen.getAllByRole('button', { name: /^G/ })).toHaveLength(2)
       expect(screen.queryByText('Google')).not.toBeInTheDocument()
+      expect(screen.queryAllByText('GitHub').length).toBeGreaterThan(0)
+      expect(screen.queryAllByText('GitLab').length).toBeGreaterThan(0)
     })
 
     it('shows no results message when search has no matches', async () => {
