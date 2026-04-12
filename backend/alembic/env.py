@@ -1,7 +1,7 @@
 from logging.config import fileConfig
 
 from alembic import context
-from app.core.config import DATABASE_URL
+from app.core.config import settings
 from app.db.database import Base
 from app.db.models import Password, User
 from sqlalchemy import engine_from_config, pool
@@ -20,7 +20,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
@@ -39,7 +39,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url", DATABASE_URL)
+    url = config.get_main_option("sqlalchemy.url", settings.DATABASE_URL)
     context.configure(
         url=url,
         target_metadata=target_metadata,

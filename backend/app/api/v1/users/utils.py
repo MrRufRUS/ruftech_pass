@@ -5,16 +5,26 @@ import jwt
 from core.config import settings
 from cryptography.fernet import Fernet
 
-cipher = Fernet(settings.PASSWORD_SECRET_KEY.encode())
+_cipher: Fernet | None = None
+
+
+def _get_cipher() -> Fernet:
+    global _cipher
+    if _cipher is None:
+        _cipher = Fernet(settings.PASSWORD_SECRET_KEY.encode())
+    return _cipher
 
 
 def encode_jwt(
     payload: dict,
-    key: str = settings.auth_jwt.private_key_path.read_text(),
+    key: str | None = None,
     algorithm: str = settings.auth_jwt.algorithm,
     expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
 ):
+    # Ключ читается лениво при вызове, а не при импорте модуля
+    if key is None:
+        key = settings.auth_jwt.private_key_path.read_text()
     to_encode = payload.copy()
     now = datetime.utcnow()
     if expire_timedelta:
@@ -28,9 +38,12 @@ def encode_jwt(
 
 def decode_jwt(
     token: str | bytes,
-    public_key: str = settings.auth_jwt.public_key_path.read_text(),
+    public_key: str | None = None,
     algorithm: str = settings.auth_jwt.algorithm,
 ):
+    # Ключ читается лениво при вызове, а не при импорте модуля
+    if public_key is None:
+        public_key = settings.auth_jwt.public_key_path.read_text()
     decoded = jwt.decode(token, public_key, algorithms=[algorithm])
     return decoded
 
@@ -46,8 +59,8 @@ def validate_password(password: str, hashed_password: bytes) -> bool:
 
 
 def encrypt_password(password: str) -> str:
-    return cipher.encrypt(password.encode()).decode()
+    return _get_cipher().encrypt(password.encode()).decode()
 
 
 def decrypt_password(encrypted: str) -> str:
-    return cipher.decrypt(encrypted.encode()).decode()
+    return _get_cipher().decrypt(encrypted.encode()).decode()

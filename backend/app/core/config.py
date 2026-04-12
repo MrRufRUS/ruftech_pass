@@ -1,16 +1,9 @@
-import os
 from pathlib import Path
 
-from dotenv import load_dotenv
 from pydantic import BaseModel
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-load_dotenv(BASE_DIR / ".env")
-
-DATABASE_URL = os.getenv("DATABASE_URL")
-PASSWORD_SECRET_KEY = os.getenv("PASSWORD_SECRET_KEY")
 
 
 class AuthJWT(BaseModel):
@@ -21,16 +14,16 @@ class AuthJWT(BaseModel):
 
 
 class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=str(BASE_DIR / ".env"),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
     api_v1_prefix: str = "/api/v1"
     auth_jwt: AuthJWT = AuthJWT()
-
-    @property
-    def DATABASE_URL(self) -> str:
-        return DATABASE_URL
-
-    @property
-    def PASSWORD_SECRET_KEY(self) -> str:
-        return PASSWORD_SECRET_KEY
+    DATABASE_URL: str = ""
+    PASSWORD_SECRET_KEY: str = ""
 
 
 settings = Settings()

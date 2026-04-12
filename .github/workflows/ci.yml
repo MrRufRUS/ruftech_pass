@@ -61,6 +61,12 @@ jobs:
       - name: Установка зависимостей
         run: uv sync
 
+      - name: Генерация тестовых JWT-ключей
+        run: |
+          mkdir -p certs
+          openssl genrsa -out certs/jwt-private.pem 2048
+          openssl rsa -in certs/jwt-private.pem -pubout -out certs/jwt-public.pem
+
       - name: Запуск тестов с покрытием
         # Exit code 5 = нет тестов для сбора — не считается ошибкой
         run: |
@@ -146,6 +152,12 @@ jobs:
 
       - name: Установка prod-зависимостей
         run: uv sync --no-dev
+
+      - name: Генерация тестовых JWT-ключей
+        run: |
+          mkdir -p certs
+          openssl genrsa -out certs/jwt-private.pem 2048
+          openssl rsa -in certs/jwt-private.pem -pubout -out certs/jwt-public.pem
 
       - name: Проверка импорта приложения
         # PYTHONPATH=app воспроизводит prod-окружение (docker-compose: cd app && uvicorn main:app)
