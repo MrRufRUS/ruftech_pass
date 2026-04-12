@@ -1,0 +1,66 @@
+name: Release Please
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # ─────────────────────────────────────────────
+  # 1. Создание/обновление Release PR и тега
+  # ─────────────────────────────────────────────
+  release-please:
+    name: Release Please
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # ─────────────────────────────────────────────
+  # 2. Публикация Docker-образов при создании релиза
+  # ─────────────────────────────────────────────
+  docker-publish:
+    name: Публикация Docker-образов
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ needs.release-please.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Вход в Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Сборка и публикация образа бэкенда
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          docker build -t $DOCKERHUB_USERNAME/ruftech-backend:$TAG ./backend
+          docker tag $DOCKERHUB_USERNAME/ruftech-backend:$TAG $DOCKERHUB_USERNAME/ruftech-backend:latest
+          docker push $DOCKERHUB_USERNAME/ruftech-backend:$TAG
+          docker push $DOCKERHUB_USERNAME/ruftech-backend:latest
+
+      - name: Сборка и публикация образа фронтенда
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: |
+          docker build -t $DOCKERHUB_USERNAME/ruftech-frontend:$TAG ./frontend -f ./frontend/apps/pass/Dockerfile
+          docker tag $DOCKERHUB_USERNAME/ruftech-frontend:$TAG $DOCKERHUB_USERNAME/ruftech-frontend:latest
+          docker push $DOCKERHUB_USERNAME/ruftech-frontend:$TAG
+          docker push $DOCKERHUB_USERNAME/ruftech-frontend:latest
