@@ -12,7 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   # ─────────────────────────────────────────────
   # 1. Линтинг бэкенда (ruff)
   # ─────────────────────────────────────────────
@@ -69,6 +68,8 @@ jobs:
 
       - name: Запуск тестов с покрытием
         # Exit code 5 = нет тестов для сбора — не считается ошибкой
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           uv run --with pytest-cov pytest \
             --cov=app \
@@ -160,6 +161,9 @@ jobs:
           openssl rsa -in certs/jwt-private.pem -pubout -out certs/jwt-public.pem
 
       - name: Проверка импорта приложения
+        # DATABASE_URL нужен для парсинга движка SQLAlchemy при импорте (реального подключения нет)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         # PYTHONPATH=app воспроизводит prod-окружение (docker-compose: cd app && uvicorn main:app)
         run: PYTHONPATH=app uv run python -c "from main import app; print('OK')"
 
