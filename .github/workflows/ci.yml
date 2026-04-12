@@ -67,16 +67,17 @@ jobs:
           openssl rsa -in certs/jwt-private.pem -pubout -out certs/jwt-public.pem
 
       - name: Запуск тестов с покрытием
-        # Exit code 5 = нет тестов для сбора — не считается ошибкой
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          # Unit-тесты используют SQLite in-memory — внешняя БД не нужна
+          DATABASE_URL: "sqlite:///:memory:"
+          # Тестовый Fernet-ключ (32 нулевых байта, base64url) — только для тестов
+          PASSWORD_SECRET_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
         run: |
-          uv run --with pytest-cov pytest \
+          uv run pytest \
             --cov=app \
             --cov-report=xml:coverage.xml \
             --cov-report=term-missing \
-            --tb=short \
-            || [ $? -eq 5 ]
+            --tb=short
 
       - name: Генерация markdown-отчёта покрытия бэкенда
         if: always()
@@ -163,7 +164,7 @@ jobs:
       - name: Проверка импорта приложения
         # DATABASE_URL нужен для парсинга движка SQLAlchemy при импорте (реального подключения нет)
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: "sqlite:///./build_check.db"
         # PYTHONPATH=app воспроизводит prod-окружение (docker-compose: cd app && uvicorn main:app)
         run: PYTHONPATH=app uv run python -c "from main import app; print('OK')"
 

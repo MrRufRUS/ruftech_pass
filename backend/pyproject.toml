@@ -21,10 +21,18 @@ dependencies = [
 [dependency-groups]
 dev = [
     "black>=26.1.0",
+    "httpx>=0.27.0",
     "isort>=8.0.1",
     "pre-commit>=4.5.1",
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
     "ruff>=0.15.8",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["app"]
+
 [tool.ruff]
 exclude = [
     "alembic",
