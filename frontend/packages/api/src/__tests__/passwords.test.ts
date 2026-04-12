@@ -69,9 +69,9 @@ describe('PasswordDetail', () => {
       service_name: 'GitHub',
       service_url: 'https://github.com',
       login: 'john',
-      password_hash: '$2b$12$abc',
+      password: '$2b$12$abc',
     })
-    expect(result.password_hash).toBe('$2b$12$abc')
+    expect(result.password).toBe('$2b$12$abc')
   })
 
   it('parses without service_url', () => {
@@ -79,7 +79,7 @@ describe('PasswordDetail', () => {
       id: 1,
       service_name: 'GitHub',
       login: 'john',
-      password_hash: '$2b$12$abc',
+      password: '$2b$12$abc',
     })
     expect(result.service_url).toBeUndefined()
   })

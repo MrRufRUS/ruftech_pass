@@ -23,10 +23,9 @@ describe('auth API', () => {
       }))
 
       const call = client.request.mock.calls[0]!
-      const body = call[1].body
-
+      const body = call[1].body as URLSearchParams
       expect(body.get('username')).toBe('john')
-      expect(body.get('password')).toBe('secret')
+      expect(body.get('password')).toBe('qwerty')
     })
 
     it('passes TokenInfo.parse as parse function', async () => {

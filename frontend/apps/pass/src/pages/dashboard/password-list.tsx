@@ -26,6 +26,7 @@ export const PasswordList: FC<Props> = ({ passwords, loading, onSelect, onAdd })
   if (passwords.length === 0) {
     return (
       <div className={s.empty}>
+        <span className={s.emptyIcon}>🔒</span>
         <p>{t('empty.title')}</p>
         <p>{t('empty.description')}</p>
         <Button variant="successFilled" rounded="md" onClick={onAdd}>
@@ -38,13 +39,12 @@ export const PasswordList: FC<Props> = ({ passwords, loading, onSelect, onAdd })
   return (
     <div className={s.list}>
       {passwords.map((pw) => (
-        <button
-          key={pw.id}
-          type="button"
-          className={s.item}
-          onClick={() => onSelect(pw.id)}
-        >
-          <span className={s.itemName}>{pw.service_name}</span>
+        <button key={pw.id} type="button" className={s.item} onClick={() => onSelect(pw.id)}>
+          <span className={s.avatar}>{pw.service_name.charAt(0)}</span>
+          <span className={s.itemContent}>
+            <span className={s.itemName}>{pw.service_name}</span>
+          </span>
+          <span className={s.itemArrow}>→</span>
         </button>
       ))}
     </div>

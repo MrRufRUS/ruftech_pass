@@ -1,7 +1,7 @@
 {
   "folders": [
     {
-      "name": "🔐 App",
+      "name": "🔑 pass",
       "path": "frontend/apps/pass"
     },
     {
@@ -9,56 +9,20 @@
       "path": "frontend/packages/ui"
     },
     {
-      "name": "🎨 tokens",
-      "path": "frontend/packages/tokens"
+      "name": "🎨 Frontend",
+      "path": "frontend"
     },
     {
-      "name": "🔤 fonts",
-      "path": "frontend/packages/fonts"
+      "name": "🔧 Backend",
+      "path": "backend"
     },
     {
-      "name": "✏️ svg-generator",
-      "path": "frontend/packages/svg-generator"
+      "name": "⚡ app (backend)",
+      "path": "backend/app"
     },
     {
-      "name": "🌐 http-client",
-      "path": "frontend/packages/http-client"
-    },
-    {
-      "name": "📋 logger",
-      "path": "frontend/packages/logger"
-    },
-    {
-      "name": "📄 ssg",
-      "path": "frontend/packages/ssg"
-    },
-    {
-      "name": "🛠️ helpers",
-      "path": "frontend/packages/helpers"
-    },
-    {
-      "name": "🧪 e2e",
-      "path": "frontend/packages/e2e"
-    },
-    {
-      "name": "📡 api",
-      "path": "frontend/packages/api"
-    },
-    {
-      "name": "🎯 icons",
-      "path": "frontend/packages/icons"
-    },
-    {
-      "name": "⚙️ eslint-config",
-      "path": "frontend/packages/eslint-config"
-    },
-    {
-      "name": "⚙️ typescript-config",
-      "path": "frontend/packages/typescript-config"
-    },
-    {
-      "name": "📦 root",
-      "path": "./"
+      "name": "🏠 Root",
+      "path": "."
     }
   ]
 }

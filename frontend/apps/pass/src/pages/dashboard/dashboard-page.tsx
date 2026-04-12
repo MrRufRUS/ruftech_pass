@@ -6,6 +6,7 @@ import { useHttpClient } from '@ruftech/http-client/react'
 import { Heading } from '@ruftech/ui/heading'
 import { Button } from '@ruftech/ui/button'
 import { Alert } from '@ruftech/ui/alert'
+import { DashboardHeader } from '@/components/dashboard-header'
 import { listPasswords, createPassword, getPassword, updatePassword, deletePassword } from '@/shared/passwords'
 import { PasswordList } from './password-list'
 import { PasswordFormModal } from './password-form-modal'
@@ -101,64 +102,67 @@ export function DashboardPage() {
   }
 
   return (
-    <div className={s.page}>
-      <div className={s.container}>
-        <div className={s.header}>
-          <Heading level={1}>{t('title')}</Heading>
-          <Button variant="successFilled" rounded="md" onClick={() => setPageView({ view: 'create' })}>
-            {t('addPassword')}
-          </Button>
+    <>
+      <DashboardHeader />
+      <div className={s.page}>
+        <div className={s.container}>
+          <div className={s.pageHeader}>
+            <Heading level={1}>{t('title')}</Heading>
+            <Button variant="successFilled" rounded="md" onClick={() => setPageView({ view: 'create' })}>
+              {t('addPassword')}
+            </Button>
+          </div>
+
+          {error && (
+            <Alert className={s.alert} variant="error" dismissible onDismiss={() => setError('')}>
+              {error}
+            </Alert>
+          )}
+
+          <PasswordList
+            passwords={passwords}
+            loading={loading}
+            onSelect={handleSelect}
+            onAdd={() => setPageView({ view: 'create' })}
+          />
+
+          <PasswordFormModal
+            open={pageView.view === 'create'}
+            mode="create"
+            onSubmit={handleCreate}
+            onClose={() => setPageView({ view: 'list' })}
+          />
+
+          <PasswordFormModal
+            open={pageView.view === 'edit'}
+            mode="edit"
+            initial={pageView.view === 'edit' ? pageView.initial : null}
+            onSubmit={handleEdit}
+            onClose={() => setPageView({ view: 'list' })}
+          />
+
+          <PasswordDetailModal
+            open={pageView.view === 'detail'}
+            detail={detail}
+            loading={detailLoading}
+            onEdit={() => {
+              if (detail) setPageView({ view: 'edit', id: detail.id, initial: detail })
+            }}
+            onDelete={() => {
+              if (detail) setPageView({ view: 'delete-confirm', id: detail.id, name: detail.service_name })
+            }}
+            onClose={() => setPageView({ view: 'list' })}
+          />
+
+          <DeleteConfirmDialog
+            open={pageView.view === 'delete-confirm'}
+            serviceName={pageView.view === 'delete-confirm' ? pageView.name : ''}
+            deleting={deleting}
+            onConfirm={handleDelete}
+            onCancel={() => setPageView({ view: 'list' })}
+          />
         </div>
-
-        {error && (
-          <Alert className={s.alert} variant="error" dismissible onDismiss={() => setError('')}>
-            {error}
-          </Alert>
-        )}
-
-        <PasswordList
-          passwords={passwords}
-          loading={loading}
-          onSelect={handleSelect}
-          onAdd={() => setPageView({ view: 'create' })}
-        />
-
-        <PasswordFormModal
-          open={pageView.view === 'create'}
-          mode="create"
-          onSubmit={handleCreate}
-          onClose={() => setPageView({ view: 'list' })}
-        />
-
-        <PasswordFormModal
-          open={pageView.view === 'edit'}
-          mode="edit"
-          initial={pageView.view === 'edit' ? pageView.initial : null}
-          onSubmit={handleEdit}
-          onClose={() => setPageView({ view: 'list' })}
-        />
-
-        <PasswordDetailModal
-          open={pageView.view === 'detail'}
-          detail={detail}
-          loading={detailLoading}
-          onEdit={() => {
-            if (detail) setPageView({ view: 'edit', id: detail.id, initial: detail })
-          }}
-          onDelete={() => {
-            if (detail) setPageView({ view: 'delete-confirm', id: detail.id, name: detail.service_name })
-          }}
-          onClose={() => setPageView({ view: 'list' })}
-        />
-
-        <DeleteConfirmDialog
-          open={pageView.view === 'delete-confirm'}
-          serviceName={pageView.view === 'delete-confirm' ? pageView.name : ''}
-          deleting={deleting}
-          onConfirm={handleDelete}
-          onCancel={() => setPageView({ view: 'list' })}
-        />
       </div>
-    </div>
+    </>
   )
 }

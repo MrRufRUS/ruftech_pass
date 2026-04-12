@@ -1,7 +1,7 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useRouterState } from '@tanstack/react-router'
+import { useNavigate, useRouterState, useSearch } from '@tanstack/react-router'
 import { LoginRequest, ApiError } from '@ruftech/api'
 import { HttpError } from '@ruftech/http-client'
 import { useHttpClient } from '@ruftech/http-client/react'
@@ -14,6 +14,7 @@ import { Spinner } from '@ruftech/ui/spinner'
 import { DEFAULT_LOCALE, detectLocale } from '@/shared/i18n'
 import { useDocumentMeta } from '@/shared/i18n'
 import { login } from '@/shared/auth'
+import { AuthHeader } from '@/components/auth-header'
 import * as s from './auth-page.css'
 
 type FormState = 'idle' | 'submitting' | 'error'
@@ -31,6 +32,8 @@ export function AuthPage() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const locale = detectLocale(pathname)
   const client = useHttpClient()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { redirect: redirectPath } = useSearch({ strict: false }) as { redirect?: string }
 
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState('')
@@ -66,7 +69,9 @@ export function AuthPage() {
 
     try {
       await login(client, result.data)
-      if (locale === DEFAULT_LOCALE) {
+      if (redirectPath) {
+        navigate({ href: redirectPath })
+      } else if (locale === DEFAULT_LOCALE) {
         navigate({ to: '/dashboard' })
       } else {
         navigate({ to: '/$locale/dashboard', params: { locale } })
@@ -98,6 +103,8 @@ export function AuthPage() {
   }
 
   return (
+    <>
+    <AuthHeader />
     <div className={s.page}>
       <div className={s.container}>
         <div className={s.card}>
@@ -143,5 +150,6 @@ export function AuthPage() {
         </div>
       </div>
     </div>
+    </>
   )
 }

@@ -30,15 +30,15 @@ const light = {
 
 const dark = {
   text: p.white,
-  textMuted: p.whiteSub,
-  background: p.greyBlack,
+  textMuted: '#8b93a7',
+  background: p.deepSpace,
   backgroundTransparent: 'transparent',
-  surface: p.greySurface,
-  border: p.lightBorder,
-  primary: p.softBlue,
-  primaryHover: p.blue,
-  primaryPressed: p.darkBlue,
-  success: p.green,
+  surface: p.spaceElevated,
+  border: 'rgba(255,255,255,0.07)',
+  primary: p.indigo,
+  primaryHover: p.indigoDark,
+  primaryPressed: p.indigoDeep,
+  success: p.emerald,
   successHover: p.darkGreen,
   successPressed: p.deepGreen,
   error: p.red,
@@ -47,10 +47,10 @@ const dark = {
   warning: p.brightAmber,
   warningHover: p.amber,
   warningPressed: p.darkAmber,
-  borderSubtle: 'rgba(255,255,255,0.3)',
-  surfaceSubtle: 'rgba(255,255,255,0.1)',
-  logoBg: p.darkBlue,
-  backgroundDark: p.white,
+  borderSubtle: 'rgba(129,140,248,0.15)',
+  surfaceSubtle: 'rgba(129,140,248,0.1)',
+  logoBg: p.indigoDark,
+  backgroundDark: p.spaceMid,
 } as const
 
 type ColorKey = keyof typeof vars.color

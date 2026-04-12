@@ -28,49 +28,21 @@ export const inner = style({
   },
 })
 
-export const nav = style({
+export const brand = style({
   display: 'flex',
   alignItems: 'center',
-  gap: vars.spacing.m,
+  gap: vars.spacing.s,
 })
 
-export const navButton = style({
-  all: 'unset',
-  cursor: 'pointer',
-  font: vars.font.shorthand.uiRegular,
-  color: 'rgba(255, 255, 255, 0.6)',
-  transitionProperty: 'color',
-  transitionDuration: vars.transition.duration.fast,
-  transitionTimingFunction: vars.transition.easing.base,
-  ':hover': {
-    color: 'white',
-  },
-  ':focus-visible': {
-    outline: `2px solid ${vars.color.primary}`,
-    outlineOffset: 2,
-    borderRadius: vars.radii.xs,
-  },
+export const brandIcon = style({
+  fontSize: '1.25rem',
+  lineHeight: 1,
 })
 
-export const loginLink = style({
+export const brandName = style({
   font: vars.font.shorthand.uiRegular,
-  color: '#a5b4fc',
-  textDecorationLine: 'none',
-  paddingBlock: vars.padding.xs,
-  paddingInline: vars.padding.m,
-  border: '1px solid rgba(129,140,248,0.35)',
-  borderRadius: vars.radii.pill,
-  transitionProperty: 'border-color, background-color',
-  transitionDuration: vars.transition.duration.fast,
-  transitionTimingFunction: vars.transition.easing.base,
-  ':hover': {
-    borderColor: '#818cf8',
-    backgroundColor: 'rgba(129,140,248,0.1)',
-  },
-  ':focus-visible': {
-    outline: `2px solid ${vars.color.primary}`,
-    outlineOffset: 2,
-  },
+  color: 'white',
+  fontWeight: 600,
 })
 
 export const actions = style({

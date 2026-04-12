@@ -15,3 +15,5 @@ export type { IHttpLogInfo, IHttpLogger, IHttpLogSanitizer, IWithLoggingOptions 
 export { withLogging } from './withLogging'
 
 export { withCredentials } from './withCredentials'
+
+export { withUnauthorizedHandler } from './withUnauthorizedHandler'

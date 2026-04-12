@@ -8,10 +8,13 @@ export const HeroSection: FC = () => {
 
   return (
     <section id="hero" className={s.section}>
-      <Logo width={80} />
-      <h1 className={s.title}>{t('hero.title')}</h1>
-      <h2 className={s.subtitle}>{t('hero.subtitle')}</h2>
-      <p className={s.description}>{t('hero.description')}</p>
+      <div className={s.inner}>
+        <Logo width={80} />
+        <span className={s.eyebrow}>🔐 Менеджер паролей</span>
+        <h1 className={s.title}>{t('hero.title')}</h1>
+        <h2 className={s.subtitle}>{t('hero.subtitle')}</h2>
+        <p className={s.description}>{t('hero.description')}</p>
+      </div>
     </section>
   )
 }

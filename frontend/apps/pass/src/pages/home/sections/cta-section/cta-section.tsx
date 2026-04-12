@@ -12,11 +12,13 @@ export const CtaSection: FC<CtaSectionProps> = ({ onSignupClick }) => {
 
   return (
     <section className={s.section}>
-      <h2 className={s.heading}>{t('cta.heading')}</h2>
-      <p className={s.description}>{t('cta.description')}</p>
-      <Button variant="surface" rounded="full" onClick={onSignupClick}>
-        {t('cta.button')}
-      </Button>
+      <div className={s.inner}>
+        <h2 className={s.heading}>{t('cta.heading')}</h2>
+        <p className={s.description}>{t('cta.description')}</p>
+        <Button variant="surface" rounded="full" onClick={onSignupClick}>
+          {t('cta.button')}
+        </Button>
+      </div>
     </section>
   )
 }

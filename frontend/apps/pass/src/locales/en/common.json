@@ -3,6 +3,8 @@
     "home": "RufTECH Pass",
     "features": "Features",
     "about": "About",
-    "login": "Log In"
+    "login": "Log In",
+    "myPasswords": "My Passwords",
+    "logout": "Log Out"
   }
 }

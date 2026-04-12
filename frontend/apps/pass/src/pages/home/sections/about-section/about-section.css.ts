@@ -8,7 +8,7 @@ export const section = style({
   gap: vars.spacing.l,
   paddingBlock: vars.padding.xxl,
   paddingInline: vars.padding.l,
-  backgroundColor: vars.color.surface,
+  backgroundColor: vars.color.backgroundDark,
   textAlign: 'center',
   '@media': {
     [media.desktop]: {
@@ -19,7 +19,7 @@ export const section = style({
 
 export const description = style({
   font: vars.font.shorthand.regularText,
-  color: vars.color.textMuted,
+  color: '#8b93a7',
   margin: 0,
   maxWidth: '40rem',
 })

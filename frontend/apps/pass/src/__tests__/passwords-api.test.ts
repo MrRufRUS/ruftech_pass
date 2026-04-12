@@ -80,12 +80,12 @@ describe('passwords API', () => {
         id: 1,
         service_name: 'X',
         login: 'u',
-        password_hash: '$2b$hash',
+        password: '$2b$hash',
       })).toEqual({
         id: 1,
         service_name: 'X',
         login: 'u',
-        password_hash: '$2b$hash',
+        password: '$2b$hash',
       })
     })
   })
@@ -112,12 +112,12 @@ describe('passwords API', () => {
         id: 1,
         service_name: 'Test',
         login: 'admin',
-        password_hash: 'hash',
+        password: 'hash',
       })).toEqual({
         id: 1,
         service_name: 'Test',
         login: 'admin',
-        password_hash: 'hash',
+        password: 'hash',
       })
     })
   })

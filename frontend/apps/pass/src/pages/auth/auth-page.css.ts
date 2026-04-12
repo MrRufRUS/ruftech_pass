@@ -7,9 +7,19 @@ export const page = style({
   alignItems: 'center',
   justifyContent: 'center',
   minHeight: '100dvh',
+  paddingTop: '72px',
   paddingInline: vars.padding.l,
-  paddingBlock: vars.padding.xl,
+  paddingBottom: vars.padding.xl,
   backgroundColor: vars.color.background,
+  position: 'relative',
+  overflow: 'hidden',
+  '::before': {
+    content: '""',
+    position: 'absolute',
+    inset: 0,
+    background: 'radial-gradient(ellipse 70% 60% at 50% 30%, rgba(99,102,241,0.18) 0%, transparent 65%)',
+    pointerEvents: 'none',
+  },
 })
 
 export const container = style({
@@ -18,6 +28,8 @@ export const container = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  position: 'relative',
+  zIndex: 1,
 })
 
 export const card = style({
@@ -27,6 +39,12 @@ export const card = style({
   flexDirection: 'column',
   alignItems: 'center',
   gap: vars.spacing.l,
+  padding: vars.padding.xxl,
+  backgroundColor: 'rgba(23, 23, 42, 0.8)',
+  border: '1px solid rgba(129, 140, 248, 0.2)',
+  borderRadius: vars.radii.l,
+  backdropFilter: 'blur(20px)',
+  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(129, 140, 248, 0.05)',
 })
 
 export const form = style({

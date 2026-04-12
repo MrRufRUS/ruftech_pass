@@ -62,7 +62,7 @@ export const PasswordDetailModal: FC<Props> = ({
                 <div className={s.fieldRow}>
                   <span className={s.fieldLabel}>{t('fields.password')}</span>
                   <span className={s.fieldValue}>
-                    {showPassword ? detail.password_hash : '••••••••'}
+                    {showPassword ? detail.password : '••••••••'}
                     <button
                       type="button"
                       className={s.passwordToggle}

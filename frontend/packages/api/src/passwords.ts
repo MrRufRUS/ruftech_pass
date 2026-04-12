@@ -21,7 +21,7 @@ export const PasswordDetail = z.object({
   service_name: z.string(),
   service_url: z.string().url().nullable().optional(),
   login: z.string(),
-  password_hash: z.string(),
+  password: z.string(),
 })
 
 export type IPasswordDetail = z.infer<typeof PasswordDetail>

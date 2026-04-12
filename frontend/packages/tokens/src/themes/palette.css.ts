@@ -26,4 +26,12 @@ createGlobalTheme(':root', vars.palette, {
   darkAmber: '#d97706',
   deepAmber: '#92400e',
   brightAmber: '#fbbf24',
+  deepSpace: '#0a0a12',
+  spaceMid: '#10101e',
+  spaceElevated: '#17172a',
+  indigo: '#818cf8',
+  indigoDark: '#6366f1',
+  indigoDeep: '#4f46e5',
+  violet: '#a78bfa',
+  emerald: '#34d399',
 })

@@ -6,7 +6,7 @@ export const Route = createFileRoute('/$locale/dashboard')({
   async beforeLoad({ params }) {
     const user = await checkAuth(httpClient)
     if (!import.meta.env.DEV && !user) {
-      throw redirect({ to: '/$locale/auth', params: { locale: params.locale } })
+      throw redirect({ to: '/$locale/auth', params: { locale: params.locale }, search: { redirect: undefined } })
     }
     return { user }
   },
