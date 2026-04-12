@@ -73,7 +73,10 @@ export const PasswordList: FC<Props> = ({ passwords, loading, onSelect, onAdd })
           className={s.searchInput}
           value={query}
           placeholder={t('search.placeholder')}
-          onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true) }}
+          onChange={(e) => {
+            setQuery(e.target.value)
+            setShowSuggestions(true)
+          }}
           onFocus={() => setShowSuggestions(true)}
           onBlur={handleBlur}
           autoComplete="off"

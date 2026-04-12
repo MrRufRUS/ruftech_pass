@@ -1,9 +1,8 @@
 // @vitest-environment happy-dom
 
+import { act, createElement, type ReactNode } from 'react'
 import { describe, it, expect, beforeEach } from 'vitest'
-import { createElement } from 'react'
 import { renderToString } from 'react-dom/server'
-import { act } from 'react'
 import { createRoot } from 'react-dom/client'
 import { I18nProvider } from '../shared/i18n/provider'
 import { DefaultI18n } from '../shared/i18n/default'
@@ -11,7 +10,7 @@ import { useDocumentMeta } from '../shared/i18n/useDocumentMeta'
 
 function createWrapper(locale: 'ru' | 'en') {
   const i18n = DefaultI18n.create(locale)
-  return ({ children }: { children: React.ReactNode }) =>
+  return ({ children }: { children: ReactNode }) =>
     createElement(I18nProvider, { locale, i18n, children })
 }
 

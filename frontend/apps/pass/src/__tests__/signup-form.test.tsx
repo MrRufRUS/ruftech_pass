@@ -101,7 +101,7 @@ describe('SignupForm', () => {
       const user = userEvent.setup()
       const client = createMockClient()
       client.request.mockRejectedValueOnce(
-        makeHttpError(400, { detail: 'Username already exists' })
+        makeHttpError(400, { detail: 'Username already exists' }),
       )
 
       renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />, { client })
@@ -117,7 +117,7 @@ describe('SignupForm', () => {
       const user = userEvent.setup()
       const client = createMockClient()
       client.request.mockRejectedValueOnce(
-        makeHttpError(400, { detail: 'Email already in use' })
+        makeHttpError(400, { detail: 'Email already in use' }),
       )
 
       renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />, { client })
@@ -151,6 +151,66 @@ describe('SignupForm', () => {
       renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={onSwitchMode} />)
       await user.click(screen.getByText('Уже есть аккаунт? Войти'))
       expect(onSwitchMode).toHaveBeenCalledOnce()
+    })
+  })
+
+  describe('zod validation', () => {
+    it('does not call API when email is invalid format', async () => {
+      const user = userEvent.setup()
+      const { client } = renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />)
+      await user.type(screen.getByPlaceholderText('Введите имя пользователя'), 'validuser')
+      await user.type(screen.getByPlaceholderText('Введите email (необязательно)'), 'not-an-email')
+      await user.type(screen.getByPlaceholderText('Введите пароль'), 'pass123')
+      await user.click(screen.getByRole('button', { name: 'Зарегистрироваться' }))
+      expect(client.request).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('error handling edge cases', () => {
+    it('shows raw detail when it is not username or email conflict', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValueOnce(
+        makeHttpError(400, { detail: 'Account suspended' }),
+      )
+
+      renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />, { client })
+      await user.type(screen.getByPlaceholderText('Введите имя пользователя'), 'user')
+      await user.type(screen.getByPlaceholderText('Введите пароль'), 'pass')
+      await user.click(screen.getByRole('button', { name: 'Зарегистрироваться' }))
+
+      expect(await screen.findByText('Account suspended')).toBeVisible()
+    })
+
+    it('shows network error when response body is not valid ApiError', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValueOnce(
+        makeHttpError(500, { unexpected: 'format' }),
+      )
+
+      renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />, { client })
+      await user.type(screen.getByPlaceholderText('Введите имя пользователя'), 'user')
+      await user.type(screen.getByPlaceholderText('Введите пароль'), 'pass')
+      await user.click(screen.getByRole('button', { name: 'Зарегистрироваться' }))
+
+      expect(await screen.findByText('Ошибка сети. Попробуйте позже.')).toBeVisible()
+    })
+
+    it('dismisses error alert when close button clicked', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValueOnce(new Error('network'))
+
+      renderWithProviders(<SignupForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />, { client })
+      await user.type(screen.getByPlaceholderText('Введите имя пользователя'), 'user')
+      await user.type(screen.getByPlaceholderText('Введите пароль'), 'pass')
+      await user.click(screen.getByRole('button', { name: 'Зарегистрироваться' }))
+
+      await screen.findByText('Ошибка сети. Попробуйте позже.')
+      await user.click(screen.getByRole('button', { name: 'Закрыть' }))
+
+      expect(screen.queryByText('Ошибка сети. Попробуйте позже.')).not.toBeInTheDocument()
     })
   })
 })

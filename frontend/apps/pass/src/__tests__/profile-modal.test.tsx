@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ProfileModal } from '@/pages/dashboard/profile-modal'
 import { renderWithProviders, createMockClient } from '../test-utils'
@@ -101,6 +101,111 @@ describe('ProfileModal', () => {
       await user.click(screen.getByRole('button', { name: 'Удалить аккаунт' }))
       await user.click(screen.getByRole('button', { name: 'Отмена' }))
       expect(screen.queryByText('Вы уверены? Это действие нельзя отменить. Все ваши пароли будут удалены.')).not.toBeInTheDocument()
+    })
+
+    it('calls navigate after successful account deletion', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockResolvedValue({})
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+      await user.click(screen.getByRole('button', { name: 'Удалить аккаунт' }))
+      await user.click(screen.getByRole('button', { name: 'Да, удалить аккаунт' }))
+
+      await vi.waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith(expect.objectContaining({ href: '/' }))
+      })
+    })
+
+    it('hides confirmation on delete API error', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValue(new Error('network'))
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+      await user.click(screen.getByRole('button', { name: 'Удалить аккаунт' }))
+      await user.click(screen.getByRole('button', { name: 'Да, удалить аккаунт' }))
+
+      await vi.waitFor(() => {
+        expect(screen.queryByText('Вы уверены? Это действие нельзя отменить. Все ваши пароли будут удалены.')).not.toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('email update error', () => {
+    it('shows error alert when email update fails', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValue(new Error('network'))
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+
+      await user.type(screen.getByPlaceholderText('Введите новый email'), 'fail@example.com')
+      await user.click(screen.getByRole('button', { name: 'Сохранить email' }))
+
+      expect(await screen.findByText('Ошибка сети. Попробуйте позже.')).toBeVisible()
+    })
+
+    it('dismisses email error alert via onDismiss', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValue(new Error('network'))
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+
+      await user.type(screen.getByPlaceholderText('Введите новый email'), 'fail@example.com')
+      await user.click(screen.getByRole('button', { name: 'Сохранить email' }))
+
+      const alert = await screen.findByRole('alert')
+      await user.click(within(alert).getByRole('button', { name: 'Закрыть' }))
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('password update', () => {
+    it('calls navigate after successful password update', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockResolvedValue({})
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+
+      await user.type(screen.getByPlaceholderText('Введите новый пароль'), 'newpass123')
+      await user.click(screen.getByRole('button', { name: 'Сохранить пароль' }))
+
+      await vi.waitFor(() => {
+        expect(mockNavigate).toHaveBeenCalledWith(expect.objectContaining({ href: '/auth' }))
+      })
+    })
+
+    it('shows error alert when password update fails', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValue(new Error('network'))
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+
+      await user.type(screen.getByPlaceholderText('Введите новый пароль'), 'newpass123')
+      await user.click(screen.getByRole('button', { name: 'Сохранить пароль' }))
+
+      expect(await screen.findByText('Ошибка сети. Попробуйте позже.')).toBeVisible()
+    })
+
+    it('dismisses password error alert via onDismiss', async () => {
+      const user = userEvent.setup()
+      const client = createMockClient()
+      client.request.mockRejectedValue(new Error('network'))
+
+      renderWithProviders(<ProfileModal open={true} onClose={vi.fn()} />, { client })
+
+      await user.type(screen.getByPlaceholderText('Введите новый пароль'), 'newpass123')
+      await user.click(screen.getByRole('button', { name: 'Сохранить пароль' }))
+
+      const alert = await screen.findByRole('alert')
+      await user.click(within(alert).getByRole('button', { name: 'Закрыть' }))
+
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     })
   })
 })

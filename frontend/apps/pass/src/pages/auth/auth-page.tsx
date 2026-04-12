@@ -15,7 +15,7 @@ export function AuthPage() {
   const navigate = useNavigate()
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const locale = detectLocale(pathname)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const { redirect: redirectPath } = useSearch({ strict: false }) as { redirect?: string }
 
   const [mode, setMode] = useState<Mode>('login')

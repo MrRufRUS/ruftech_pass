@@ -56,13 +56,12 @@ describe('DashboardHeader', () => {
       const user = userEvent.setup()
       const client = createMockClient()
       client.request.mockRejectedValue(new Error('network'))
-      const navigate = vi.fn()
       vi.mocked(vi.importMock('@tanstack/react-router')).catch(() => {})
 
       renderWithProviders(<DashboardHeader onOpenProfile={vi.fn()} />, { client })
       // Should not throw even on API failure
       await expect(
-        user.click(screen.getByRole('button', { name: 'Выйти' }))
+        user.click(screen.getByRole('button', { name: 'Выйти' })),
       ).resolves.toBeUndefined()
     })
   })

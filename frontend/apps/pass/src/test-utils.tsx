@@ -1,5 +1,5 @@
-import type { ReactElement } from 'react'
-import type { RenderOptions } from '@testing-library/react'
+import type { ReactElement, ReactNode } from 'react'
+import type { RenderOptions, RenderResult } from '@testing-library/react'
 import type { IHttpClient } from '@ruftech/http-client'
 import { render } from '@testing-library/react'
 import { vi } from 'vitest'
@@ -24,11 +24,11 @@ export interface TestRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 
 export function renderWithProviders(
   ui: ReactElement,
-  { client, ...options }: TestRenderOptions = {}
-) {
+  { client, ...options }: TestRenderOptions = {},
+): RenderResult & { client: MockClient } {
   const mockClient = client ?? createMockClient()
 
-  function Wrapper({ children }: { children: React.ReactNode }) {
+  function Wrapper({ children }: { children: ReactNode }) {
     return (
       <HttpClientProvider client={mockClient}>
         <I18nProvider locale="ru" i18n={defaultI18n}>

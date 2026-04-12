@@ -14,7 +14,7 @@ describe('PasswordList', () => {
   describe('loading state', () => {
     it('renders spinner when loading', () => {
       renderWithProviders(
-        <PasswordList passwords={[]} loading={true} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={[]} loading={true} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       // Spinner renders in center div when loading
       expect(document.querySelector('svg') || document.querySelector('[class*="center"]')).toBeTruthy()
@@ -22,7 +22,7 @@ describe('PasswordList', () => {
 
     it('does not render search or grid when loading', () => {
       renderWithProviders(
-        <PasswordList passwords={[]} loading={true} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={[]} loading={true} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
     })
@@ -31,14 +31,14 @@ describe('PasswordList', () => {
   describe('empty state', () => {
     it('shows empty title when no passwords', () => {
       renderWithProviders(
-        <PasswordList passwords={[]} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={[]} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       expect(screen.getByText('Нет сохранённых паролей')).toBeVisible()
     })
 
     it('shows description in empty state', () => {
       renderWithProviders(
-        <PasswordList passwords={[]} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={[]} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       expect(screen.getByText('Добавьте первый пароль, чтобы начать')).toBeVisible()
     })
@@ -47,7 +47,7 @@ describe('PasswordList', () => {
       const user = userEvent.setup()
       const onAdd = vi.fn()
       renderWithProviders(
-        <PasswordList passwords={[]} loading={false} onSelect={vi.fn()} onAdd={onAdd} />
+        <PasswordList passwords={[]} loading={false} onSelect={vi.fn()} onAdd={onAdd} />,
       )
       await user.click(screen.getByRole('button', { name: 'Добавить пароль' }))
       expect(onAdd).toHaveBeenCalledOnce()
@@ -57,7 +57,7 @@ describe('PasswordList', () => {
   describe('with passwords', () => {
     it('renders password cards', () => {
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       expect(screen.getByText('GitHub')).toBeVisible()
       expect(screen.getByText('Google')).toBeVisible()
@@ -68,7 +68,7 @@ describe('PasswordList', () => {
       const user = userEvent.setup()
       const onSelect = vi.fn()
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={onSelect} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={onSelect} onAdd={vi.fn()} />,
       )
       await user.click(screen.getByText('GitHub'))
       expect(onSelect).toHaveBeenCalledWith(1)
@@ -76,7 +76,7 @@ describe('PasswordList', () => {
 
     it('renders search input', () => {
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       expect(screen.getByRole('searchbox')).toBeInTheDocument()
     })
@@ -86,7 +86,7 @@ describe('PasswordList', () => {
     it('filters cards by search query', async () => {
       const user = userEvent.setup()
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       await user.type(screen.getByRole('searchbox'), 'git')
       // GitHub and GitLab match, Google does not
@@ -98,7 +98,7 @@ describe('PasswordList', () => {
     it('shows no results message when search has no matches', async () => {
       const user = userEvent.setup()
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       await user.type(screen.getByRole('searchbox'), 'xyz')
       expect(screen.getByText('Ничего не найдено')).toBeVisible()
@@ -107,7 +107,7 @@ describe('PasswordList', () => {
     it('shows autocomplete suggestions on focus', async () => {
       const user = userEvent.setup()
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={vi.fn()} onAdd={vi.fn()} />,
       )
       const input = screen.getByRole('searchbox')
       await user.type(input, 'git')
@@ -119,7 +119,7 @@ describe('PasswordList', () => {
       const user = userEvent.setup()
       const onSelect = vi.fn()
       renderWithProviders(
-        <PasswordList passwords={mockPasswords} loading={false} onSelect={onSelect} onAdd={vi.fn()} />
+        <PasswordList passwords={mockPasswords} loading={false} onSelect={onSelect} onAdd={vi.fn()} />,
       )
       const input = screen.getByRole('searchbox')
       await user.type(input, 'git')
@@ -127,7 +127,7 @@ describe('PasswordList', () => {
       // Find suggestion buttons in the dropdown (not card buttons)
       const suggestions = screen.getAllByRole('button')
       // Click first suggestion that matches 'git'
-      const githubSuggestion = suggestions.find(b => b.textContent?.includes('GitHub'))
+      const githubSuggestion = suggestions.find((b) => b.textContent?.includes('GitHub'))
       if (githubSuggestion) {
         await user.click(githubSuggestion)
         expect(onSelect).toHaveBeenCalledWith(1)

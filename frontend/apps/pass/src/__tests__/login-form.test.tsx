@@ -116,7 +116,7 @@ describe('LoginForm', () => {
       const user = userEvent.setup()
       const client = createMockClient()
       client.request.mockRejectedValueOnce(
-        makeHttpError(400, { detail: 'Account locked' })
+        makeHttpError(400, { detail: 'Account locked' }),
       )
 
       renderWithProviders(<LoginForm onSuccess={vi.fn()} onSwitchMode={vi.fn()} />, { client })

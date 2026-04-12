@@ -8,12 +8,17 @@
     "./*": "./src/*/index.ts"
   },
   "scripts": {
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@ruftech/eslint-config": "workspace:*",
     "@ruftech/typescript-config": "workspace:*",
+    "@vitest/coverage-v8": "4.0.18",
     "eslint": "9.39.2",
-    "typescript": "5.9.3"
+    "happy-dom": "17.4.4",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
   }
 }
