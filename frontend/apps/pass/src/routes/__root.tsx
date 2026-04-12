@@ -25,8 +25,9 @@ function RootLayout() {
   useEffect(() => {
     setUnauthorizedHandler(() => {
       const currentPath = window.location.pathname
-      // Не редиректим, если уже на странице авторизации
-      if (currentPath.includes('/auth')) return
+      // Редиректим только с защищённых маршрутов (dashboard)
+      // На публичных страницах 401 — это ожидаемый ответ (например, fetchMe в LandingHeader)
+      if (!currentPath.includes('/dashboard')) return
 
       const redirectParam = { redirect: currentPath }
       if (locale === DEFAULT_LOCALE) {

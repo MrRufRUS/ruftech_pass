@@ -12,6 +12,7 @@ import { PasswordList } from './password-list'
 import { PasswordFormModal } from './password-form-modal'
 import { PasswordDetailModal } from './password-detail-modal'
 import { DeleteConfirmDialog } from './delete-confirm-dialog'
+import { ProfileModal } from './profile-modal'
 import * as s from './dashboard-page.css'
 
 type PageView
@@ -26,6 +27,7 @@ export function DashboardPage() {
   const client = useHttpClient()
 
   const [pageView, setPageView] = useState<PageView>({ view: 'list' })
+  const [profileOpen, setProfileOpen] = useState(false)
   const [passwords, setPasswords] = useState<IPasswordPublic[]>([])
   const [detail, setDetail] = useState<IPasswordDetail | null>(null)
   const [loading, setLoading] = useState(true)
@@ -103,7 +105,7 @@ export function DashboardPage() {
 
   return (
     <>
-      <DashboardHeader />
+      <DashboardHeader onOpenProfile={() => setProfileOpen(true)} />
       <div className={s.page}>
         <div className={s.container}>
           <div className={s.pageHeader}>
@@ -163,6 +165,8 @@ export function DashboardPage() {
           />
         </div>
       </div>
+
+      <ProfileModal open={profileOpen} onClose={() => setProfileOpen(false)} />
     </>
   )
 }

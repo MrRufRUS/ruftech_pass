@@ -28,10 +28,16 @@ export const inner = style({
   },
 })
 
-export const brand = style({
+export const brandLink = style({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing.s,
+  textDecoration: 'none',
+  ':focus-visible': {
+    outline: `2px solid ${vars.color.primary}`,
+    outlineOffset: 4,
+    borderRadius: vars.radii.xs,
+  },
 })
 
 export const brandIcon = style({

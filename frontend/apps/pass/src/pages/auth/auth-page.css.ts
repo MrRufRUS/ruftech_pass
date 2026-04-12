@@ -34,17 +34,16 @@ export const container = style({
 
 export const card = style({
   width: '100%',
-  maxWidth: '420px',
+  maxWidth: '480px',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   gap: vars.spacing.l,
   padding: vars.padding.xxl,
-  backgroundColor: 'rgba(23, 23, 42, 0.8)',
-  border: '1px solid rgba(129, 140, 248, 0.2)',
+  backgroundColor: vars.color.surface,
+  border: `1px solid ${vars.color.borderSubtle}`,
   borderRadius: vars.radii.l,
-  backdropFilter: 'blur(20px)',
-  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(129, 140, 248, 0.05)',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
 })
 
 export const form = style({
@@ -61,4 +60,23 @@ export const submit = style({
 
 export const alert = style({
   width: '100%',
+})
+
+export const switchLink = style({
+  all: 'unset',
+  cursor: 'pointer',
+  font: vars.font.shorthand.uiRegular,
+  color: vars.color.primary,
+  textAlign: 'center',
+  transitionProperty: 'color',
+  transitionDuration: vars.transition.duration.fast,
+  transitionTimingFunction: vars.transition.easing.base,
+  ':hover': {
+    color: vars.color.primaryHover,
+  },
+  ':focus-visible': {
+    outline: `2px solid ${vars.color.primary}`,
+    outlineOffset: 2,
+    borderRadius: vars.radii.xs,
+  },
 })

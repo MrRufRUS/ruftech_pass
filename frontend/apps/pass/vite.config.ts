@@ -36,6 +36,8 @@ export default defineConfig({
     },
   },
   test: {
+    environment: 'happy-dom',
+    setupFiles: ['./src/test-setup.ts'],
     passWithNoTests: true,
     include: ['src/**/*.test.{ts,tsx}'],
     coverage: {
@@ -49,6 +51,8 @@ export default defineConfig({
         'src/**/*.d.ts',
         'src/**/*.stories.{ts,tsx}',
         'src/**/*.test.{ts,tsx}',
+        'src/test-setup.ts',
+        'src/test-utils.tsx',
       ],
       reporter: ['text', 'html', 'lcov', 'json', 'json-summary'],
       reportsDirectory: './coverage',

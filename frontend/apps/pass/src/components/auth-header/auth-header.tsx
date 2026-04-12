@@ -46,10 +46,10 @@ export const AuthHeader: FC = () => {
   return (
     <header className={s.header}>
       <div className={s.inner}>
-        <div className={s.brand}>
+        <a href={getLocaleHref(locale)} className={s.brandLink}>
           <span className={s.brandIcon}>🔐</span>
           <span className={s.brandName}>RufTECH Pass</span>
-        </div>
+        </a>
 
         <div className={s.actions}>
           <LanguageSwitcher locales={locales} currentLocale={locale} />

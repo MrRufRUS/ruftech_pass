@@ -1,2 +1,2 @@
-export { login, fetchMe, logout } from './api'
+export { login, signup, fetchMe, updateMe, logout, deleteAccount } from './api'
 export { checkAuth } from './guard'

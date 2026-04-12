@@ -3,7 +3,7 @@ import type { ComponentPropsWithRef, FC } from 'react'
 import clsx from 'clsx'
 import * as styles from './button.css'
 
-type Variant = 'surface' | 'success' | 'successFilled' | 'errorFilled'
+type Variant = 'surface' | 'surfaceInverted' | 'success' | 'successFilled' | 'errorFilled'
 type Rounded = 'none' | 'sm' | 'md' | 'full'
 
 export type ButtonProps = IBaseWithChildrenProps & ComponentPropsWithRef<'button'> & {

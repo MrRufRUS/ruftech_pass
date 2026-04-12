@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { media, vars } from '@ruftech/tokens'
 
 export const header = style({
@@ -26,6 +26,35 @@ export const inner = style({
       paddingInline: vars.padding.xxl,
     },
   },
+})
+
+export const left = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.spacing.l,
+})
+
+export const brandLink = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: vars.spacing.s,
+  textDecorationLine: 'none',
+  ':focus-visible': {
+    outline: `2px solid ${vars.color.primary}`,
+    outlineOffset: 4,
+    borderRadius: vars.radii.xs,
+  },
+})
+
+export const brandIcon = style({
+  fontSize: '1.25rem',
+  lineHeight: 1,
+})
+
+export const brandName = style({
+  font: vars.font.shorthand.uiRegular,
+  color: 'white',
+  fontWeight: 600,
 })
 
 export const nav = style({
@@ -77,6 +106,12 @@ export const actions = style({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing.s,
+})
+
+export const langSwitcher = style({})
+
+globalStyle(`${langSwitcher} button`, {
+  color: 'rgba(255,255,255,0.7)',
 })
 
 export const themeButton = style({

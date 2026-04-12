@@ -6,6 +6,10 @@
     "description": "Add your first password to get started"
   },
   "loading": "Loading...",
+  "search": {
+    "placeholder": "Search by service name...",
+    "noResults": "Nothing found"
+  },
   "fields": {
     "serviceName": "Service Name",
     "serviceUrl": "Service URL",
@@ -41,6 +45,30 @@
   "delete": {
     "title": "Delete Password",
     "confirm": "Are you sure you want to delete \"{{name}}\"?"
+  },
+  "profile": {
+    "title": "Profile",
+    "changeEmail": "Change Email",
+    "newEmail": "New Email",
+    "newEmailPlaceholder": "Enter new email",
+    "changePassword": "Change Password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password",
+    "saveEmail": "Save Email",
+    "savePassword": "Save Password",
+    "passwordChangedNote": "You will be logged out after changing your password.",
+    "dangerZone": "Danger Zone",
+    "deleteAccount": "Delete Account",
+    "deleteConfirm": "Are you sure? This cannot be undone. All your passwords will be deleted.",
+    "deleteConfirmButton": "Yes, delete my account",
+    "success": {
+      "emailUpdated": "Email updated successfully",
+      "passwordUpdated": "Password changed. Please log in again."
+    },
+    "errors": {
+      "network": "Network error. Try again later.",
+      "invalidEmail": "Invalid email address"
+    }
   },
   "errors": {
     "duplicate": "An entry with this name already exists",

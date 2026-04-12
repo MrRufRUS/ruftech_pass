@@ -41,6 +41,20 @@ export const variant = styleVariants({
       color: 'white',
     },
   },
+  // For use on permanently-dark backgrounds (CTA, hero sections)
+  surfaceInverted: {
+    backgroundColor: 'transparent',
+    borderColor: 'rgba(255,255,255,0.4)',
+    color: 'white',
+    ':hover': {
+      backgroundColor: 'rgba(255,255,255,0.1)',
+      borderColor: 'rgba(255,255,255,0.7)',
+    },
+    ':active': {
+      backgroundColor: 'rgba(255,255,255,0.2)',
+      borderColor: 'white',
+    },
+  },
   success: {
     backgroundColor: vars.color.backgroundTransparent,
     borderColor: vars.color.border,
@@ -56,16 +70,17 @@ export const variant = styleVariants({
     },
   },
   successFilled: {
-    backgroundColor: vars.color.success,
-    borderColor: vars.color.success,
+    // #166534 = green-800: L≈0.098 → white 7.1:1 ✓ (both themes)
+    backgroundColor: '#166534',
+    borderColor: '#166534',
     color: 'white',
     ':hover': {
-      backgroundColor: vars.color.successHover,
-      borderColor: vars.color.successHover,
+      backgroundColor: '#15803d', // green-700: L≈0.160 → white 5.0:1 ✓
+      borderColor: '#15803d',
     },
     ':active': {
-      backgroundColor: vars.color.successPressed,
-      borderColor: vars.color.successPressed,
+      backgroundColor: '#14532d', // green-900: L≈0.065 → white 9.1:1 ✓
+      borderColor: '#14532d',
     },
   },
   errorFilled: {

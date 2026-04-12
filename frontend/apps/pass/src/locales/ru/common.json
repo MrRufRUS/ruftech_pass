@@ -5,6 +5,7 @@
     "about": "О проекте",
     "login": "Войти",
     "myPasswords": "Мои пароли",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "profile": "Профиль"
   }
 }

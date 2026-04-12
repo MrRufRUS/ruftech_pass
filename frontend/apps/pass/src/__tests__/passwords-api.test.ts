@@ -137,6 +137,26 @@ describe('passwords API', () => {
       const body = JSON.parse(call[1].body as string)
       expect(body).toEqual({ service_name: 'Updated' })
     })
+
+    it('parses PasswordDetail via parse fn', async () => {
+      const client = createMockClient()
+
+      await updatePassword(client, 5, { service_name: 'Updated' })
+
+      const call = client.request.mock.calls[0]!
+      const { parse } = call[1]
+      expect(parse({
+        id: 5,
+        service_name: 'Updated',
+        login: 'admin',
+        password: 'hash',
+      })).toEqual({
+        id: 5,
+        service_name: 'Updated',
+        login: 'admin',
+        password: 'hash',
+      })
+    })
   })
 
   describe('deletePassword', () => {

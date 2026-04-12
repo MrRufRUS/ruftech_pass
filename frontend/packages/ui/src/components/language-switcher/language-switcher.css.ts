@@ -39,6 +39,7 @@ export const dropdown = style({
   transitionDuration: vars.transition.duration.fast,
   transitionTimingFunction: vars.transition.easing.base,
   paddingTop: vars.padding.xs,
+  minWidth: 'max-content',
 })
 
 export const dropdownOpen = style({
@@ -51,6 +52,12 @@ export const dropdownInner = style({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.spacing.xs,
+  backgroundColor: vars.color.surface,
+  border: `1px solid ${vars.color.borderSubtle}`,
+  borderRadius: vars.radii.s,
+  paddingBlock: vars.padding.xs,
+  paddingInline: vars.padding.s,
+  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
 })
 
 export const localeLink = style({

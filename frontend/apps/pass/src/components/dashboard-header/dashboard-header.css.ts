@@ -1,4 +1,4 @@
-import { style } from '@vanilla-extract/css'
+import { globalStyle, style } from '@vanilla-extract/css'
 import { media, vars } from '@ruftech/tokens'
 
 export const header = style({
@@ -28,10 +28,16 @@ export const inner = style({
   },
 })
 
-export const brand = style({
+export const brandLink = style({
   display: 'flex',
   alignItems: 'center',
   gap: vars.spacing.s,
+  textDecoration: 'none',
+  ':focus-visible': {
+    outline: `2px solid ${vars.color.primary}`,
+    outlineOffset: 4,
+    borderRadius: vars.radii.xs,
+  },
 })
 
 export const brandIcon = style({
@@ -51,6 +57,12 @@ export const actions = style({
   gap: vars.spacing.s,
 })
 
+export const langSwitcher = style({})
+
+globalStyle(`${langSwitcher} button`, {
+  color: 'rgba(255,255,255,0.7)',
+})
+
 export const themeButton = style({
   all: 'unset',
   cursor: 'pointer',
@@ -67,6 +79,29 @@ export const themeButton = style({
   ':hover': {
     color: 'white',
     backgroundColor: 'rgba(255,255,255,0.08)',
+  },
+  ':focus-visible': {
+    outline: `2px solid ${vars.color.primary}`,
+    outlineOffset: 2,
+  },
+})
+
+export const profileButton = style({
+  all: 'unset',
+  cursor: 'pointer',
+  font: vars.font.shorthand.uiRegular,
+  color: 'rgba(255,255,255,0.7)',
+  paddingBlock: vars.padding.xs,
+  paddingInline: vars.padding.m,
+  border: '1px solid rgba(255,255,255,0.15)',
+  borderRadius: vars.radii.pill,
+  transitionProperty: 'border-color, background-color, color',
+  transitionDuration: vars.transition.duration.fast,
+  transitionTimingFunction: vars.transition.easing.base,
+  ':hover': {
+    color: 'white',
+    borderColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
   },
   ':focus-visible': {
     outline: `2px solid ${vars.color.primary}`,

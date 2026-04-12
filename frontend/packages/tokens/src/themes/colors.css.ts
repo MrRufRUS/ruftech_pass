@@ -5,7 +5,7 @@ const p = vars.palette
 
 const light = {
   text: p.greyBlack,
-  textMuted: p.greyBorder,
+  textMuted: '#666666', // solid mid-gray: ~5.7:1 on white, ~4.9:1 on #f1f1f1
   background: p.light,
   backgroundTransparent: 'transparent',
   surface: p.white,

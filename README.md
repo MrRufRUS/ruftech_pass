@@ -6,4 +6,3 @@ The RufTECH Pass is a password manager project
 2) тесты, сборка => фронтенд
 3) линт -> тесты -> билд
 4) е2е отдельной джобой
-5) 

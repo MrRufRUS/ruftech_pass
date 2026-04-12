@@ -22,7 +22,11 @@ function getStoredTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-export const DashboardHeader: FC = () => {
+type Props = {
+  onOpenProfile: () => void
+}
+
+export const DashboardHeader: FC<Props> = ({ onOpenProfile }) => {
   const { t } = useTranslation('common')
   const locale = useLocale()
   const client = useHttpClient()
@@ -64,13 +68,13 @@ export const DashboardHeader: FC = () => {
   return (
     <header className={s.header}>
       <div className={s.inner}>
-        <div className={s.brand}>
+        <a href={getLocaleHref(locale)} className={s.brandLink}>
           <span className={s.brandIcon}>🔐</span>
           <span className={s.brandName}>RufTECH Pass</span>
-        </div>
+        </a>
 
         <div className={s.actions}>
-          <LanguageSwitcher locales={locales} currentLocale={locale} />
+          <LanguageSwitcher locales={locales} currentLocale={locale} className={s.langSwitcher} />
 
           <button
             type="button"
@@ -79,6 +83,10 @@ export const DashboardHeader: FC = () => {
             aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
           >
             {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
+
+          <button type="button" className={s.profileButton} onClick={onOpenProfile}>
+            {t('nav.profile')}
           </button>
 
           <button type="button" className={s.logoutButton} onClick={handleLogout}>

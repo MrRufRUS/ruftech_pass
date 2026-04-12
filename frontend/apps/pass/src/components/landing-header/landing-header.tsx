@@ -73,20 +73,23 @@ export const LandingHeader: FC = () => {
   return (
     <header className={s.header}>
       <div className={s.inner}>
-        <nav className={s.nav}>
-          <button type="button" className={s.navButton} onClick={() => scrollTo('hero')}>
-            {t('nav.home')}
-          </button>
-          <button type="button" className={s.navButton} onClick={() => scrollTo('features')}>
-            {t('nav.features')}
-          </button>
-          <button type="button" className={s.navButton} onClick={() => scrollTo('about')}>
-            {t('nav.about')}
-          </button>
-        </nav>
+        <div className={s.left}>
+          <a href={getLocaleHref(locale)} className={s.brandLink}>
+            <span className={s.brandIcon}>🔐</span>
+            <span className={s.brandName}>RufTECH Pass</span>
+          </a>
+          <nav className={s.nav}>
+            <button type="button" className={s.navButton} onClick={() => scrollTo('features')}>
+              {t('nav.features')}
+            </button>
+            <button type="button" className={s.navButton} onClick={() => scrollTo('about')}>
+              {t('nav.about')}
+            </button>
+          </nav>
+        </div>
 
         <div className={s.actions}>
-          <LanguageSwitcher locales={locales} currentLocale={locale} />
+          <LanguageSwitcher locales={locales} currentLocale={locale} className={s.langSwitcher} />
 
           <button
             type="button"
