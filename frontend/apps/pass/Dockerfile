@@ -9,6 +9,9 @@ COPY apps/pass/ apps/pass/
 
 RUN pnpm install --frozen-lockfile
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN pnpm turbo build --filter=ruftech-pass
 
 FROM nginx:stable-alpine
