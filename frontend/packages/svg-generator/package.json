@@ -1,0 +1,27 @@
+{
+  "name": "@ruftech/svg-generator",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\"",
+    "generate": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "fontkit": "2.0.4"
+  },
+  "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
+    "@ruftech/typescript-config": "workspace:*",
+    "@types/fontkit": "2.0.8",
+    "@types/node": "25.2.1",
+    "eslint": "9.39.2",
+    "tsx": "4.19.4",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "@ruftech/typescript-config/library.json",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

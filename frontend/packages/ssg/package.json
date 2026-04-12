@@ -1,0 +1,23 @@
+{
+  "name": "@ruftech/ssg",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
+    "@ruftech/typescript-config": "workspace:*",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3",
+    "@vitest/coverage-v8": "4.0.18",
+    "vitest": "4.0.18"
+  }
+}

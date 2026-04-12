@@ -1,0 +1,131 @@
+import type { FormEvent } from 'react'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { LoginRequest, ApiError } from '@ruftech/api'
+import { HttpError } from '@ruftech/http-client'
+import { useHttpClient } from '@ruftech/http-client/react'
+import { InputField } from '@ruftech/ui/input-field'
+import { Button } from '@ruftech/ui/button'
+import { Alert } from '@ruftech/ui/alert'
+import { Heading } from '@ruftech/ui/heading'
+import { Spinner } from '@ruftech/ui/spinner'
+import { login } from '@/shared/auth'
+import * as s from './auth-page.css'
+
+type FormState = 'idle' | 'submitting' | 'error'
+
+type FieldErrors = {
+  username?: boolean
+  password?: boolean
+}
+
+type Props = {
+  onSuccess: () => void
+  onSwitchMode: () => void
+}
+
+export function LoginForm({ onSuccess, onSwitchMode }: Props) {
+  const { t } = useTranslation('auth')
+  const client = useHttpClient()
+
+  const [formState, setFormState] = useState<FormState>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    const formData = new FormData(e.currentTarget)
+    const raw = {
+      username: formData.get('username') as string,
+      password: formData.get('password') as string,
+    }
+
+    const errors: FieldErrors = {}
+    if (!raw.username.trim()) errors.username = true
+    if (!raw.password) errors.password = true
+
+    if (errors.username || errors.password) {
+      setFieldErrors(errors)
+      return
+    }
+
+    const result = LoginRequest.safeParse(raw)
+    if (!result.success) {
+      setFieldErrors({ username: true, password: true })
+      return
+    }
+
+    setFieldErrors({})
+    setFormState('submitting')
+    setErrorMessage('')
+
+    try {
+      await login(client, result.data)
+      onSuccess()
+    } catch (err) {
+      setFormState('error')
+
+      if (err instanceof HttpError) {
+        if (err.status === 401) {
+          setErrorMessage(t('errors.invalidCredentials'))
+        } else {
+          try {
+            const body: unknown = await err.response.json()
+            const parsed = ApiError.safeParse(body)
+            setErrorMessage(parsed.success ? parsed.data.detail : t('errors.networkError'))
+          } catch {
+            setErrorMessage(t('errors.networkError'))
+          }
+        }
+      } else {
+        setErrorMessage(t('errors.networkError'))
+      }
+    }
+  }
+
+  return (
+    <>
+      <Heading level={1}>{t('title')}</Heading>
+
+      {formState === 'error' && errorMessage && (
+        <Alert className={s.alert} variant="error" dismissible onDismiss={() => setFormState('idle')}>
+          {errorMessage}
+        </Alert>
+      )}
+
+      <form className={s.form} onSubmit={handleSubmit}>
+        <InputField
+          label={t('username')}
+          name="username"
+          type="text"
+          placeholder={t('usernamePlaceholder')}
+          autocomplete="username"
+          error={fieldErrors.username}
+        />
+        <InputField
+          label={t('password')}
+          name="password"
+          type="password"
+          placeholder={t('passwordPlaceholder')}
+          autocomplete="current-password"
+          error={fieldErrors.password}
+        />
+        <Button
+          className={s.submit}
+          variant="successFilled"
+          rounded="md"
+          type="submit"
+          disabled={formState === 'submitting'}
+          onClick={() => {}}
+        >
+          {formState === 'submitting' ? <Spinner size="sm" variant="text" /> : t('submit')}
+        </Button>
+      </form>
+
+      <button type="button" className={s.switchLink} onClick={onSwitchMode}>
+        {t('switchToSignup')}
+      </button>
+    </>
+  )
+}

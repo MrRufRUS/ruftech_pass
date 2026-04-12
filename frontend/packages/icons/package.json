@@ -1,0 +1,28 @@
+{
+  "name": "@ruftech/icons",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.tsx"
+  },
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\" \"src/**/*.tsx\""
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
+    "@ruftech/typescript-config": "workspace:*",
+    "@types/react": "19.0.1",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3"
+  }
+}

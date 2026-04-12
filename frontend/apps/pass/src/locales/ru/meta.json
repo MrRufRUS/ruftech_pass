@@ -1,0 +1,10 @@
+{
+  "home": {
+    "title": "RufTECH Pass — приватный менеджер паролей",
+    "description": "Храните пароли локально. Открытый исходный код, self-hosting, полная независимость."
+  },
+  "auth": {
+    "title": "Вход — RufTECH Pass",
+    "description": "Войдите в RufTECH Pass."
+  }
+}

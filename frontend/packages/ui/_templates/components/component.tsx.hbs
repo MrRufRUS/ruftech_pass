@@ -1,0 +1,18 @@
+import type { IBaseWithChildrenProps } from '../../types'
+import type { ComponentPropsWithRef, FC } from 'react'
+import clsx from "clsx";
+import { container } from './{{kebabCase component}}.css';
+
+export type {{pascalCase component}}Props = IBaseWithChildrenProps & ComponentPropsWithRef<'div'> & {};
+
+export const {{pascalCase component}}: FC<{{pascalCase component}}Props> = ({
+  className,
+  style,
+  children,
+}) => {
+  return (
+    <div className={clsx(container, className)} style={style}>
+      {children}
+    </div>
+  );
+};

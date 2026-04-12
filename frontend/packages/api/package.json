@@ -1,0 +1,26 @@
+{
+  "name": "@ruftech/api",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "zod": "3.25.67"
+  },
+  "devDependencies": {
+    "@ruftech/eslint-config": "workspace:*",
+    "@ruftech/typescript-config": "workspace:*",
+    "@vitest/coverage-v8": "4.0.18",
+    "eslint": "9.39.2",
+    "typescript": "5.9.3",
+    "vitest": "4.0.18"
+  }
+}

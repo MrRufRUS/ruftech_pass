@@ -1,0 +1,80 @@
+{
+  "title": "Менеджер паролей",
+  "addPassword": "Добавить пароль",
+  "empty": {
+    "title": "Нет сохранённых паролей",
+    "description": "Добавьте первый пароль, чтобы начать"
+  },
+  "loading": "Загрузка...",
+  "search": {
+    "placeholder": "Поиск по названию сервиса...",
+    "noResults": "Ничего не найдено"
+  },
+  "fields": {
+    "serviceName": "Название сервиса",
+    "serviceUrl": "URL сервиса",
+    "login": "Логин",
+    "password": "Пароль"
+  },
+  "placeholders": {
+    "serviceName": "Например: GitHub",
+    "serviceUrl": "https://github.com",
+    "login": "Введите логин",
+    "password": "Введите пароль"
+  },
+  "actions": {
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "copy": "Скопировать",
+    "copied": "Скопировано",
+    "close": "Закрыть",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль"
+  },
+  "create": {
+    "title": "Новый пароль"
+  },
+  "edit": {
+    "title": "Редактирование"
+  },
+  "detail": {
+    "title": "Детали пароля"
+  },
+  "delete": {
+    "title": "Удаление",
+    "confirm": "Вы уверены, что хотите удалить запись «{{name}}»?"
+  },
+  "profile": {
+    "title": "Профиль",
+    "changeEmail": "Изменить email",
+    "newEmail": "Новый email",
+    "newEmailPlaceholder": "Введите новый email",
+    "changePassword": "Изменить пароль",
+    "newPassword": "Новый пароль",
+    "newPasswordPlaceholder": "Введите новый пароль",
+    "saveEmail": "Сохранить email",
+    "savePassword": "Сохранить пароль",
+    "passwordChangedNote": "После смены пароля вы будете разлогинены.",
+    "dangerZone": "Опасная зона",
+    "deleteAccount": "Удалить аккаунт",
+    "deleteConfirm": "Вы уверены? Это действие нельзя отменить. Все ваши пароли будут удалены.",
+    "deleteConfirmButton": "Да, удалить аккаунт",
+    "success": {
+      "emailUpdated": "Email успешно обновлён",
+      "passwordUpdated": "Пароль обновлён. Войдите снова."
+    },
+    "errors": {
+      "network": "Ошибка сети. Попробуйте позже.",
+      "invalidEmail": "Некорректный email"
+    }
+  },
+  "errors": {
+    "duplicate": "Запись с таким именем уже существует",
+    "notFound": "Запись не найдена",
+    "network": "Ошибка сети. Попробуйте позже.",
+    "required": "Обязательное поле",
+    "invalidUrl": "Некорректный URL"
+  }
+}

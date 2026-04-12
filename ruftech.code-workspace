@@ -1,0 +1,28 @@
+{
+  "folders": [
+    {
+      "name": "🔑 pass",
+      "path": "frontend/apps/pass"
+    },
+    {
+      "name": "🧩 ui",
+      "path": "frontend/packages/ui"
+    },
+    {
+      "name": "🎨 Frontend",
+      "path": "frontend"
+    },
+    {
+      "name": "🔧 Backend",
+      "path": "backend"
+    },
+    {
+      "name": "⚡ app (backend)",
+      "path": "backend/app"
+    },
+    {
+      "name": "🏠 Root",
+      "path": "."
+    }
+  ]
+}

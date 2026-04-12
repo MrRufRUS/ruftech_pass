@@ -1,0 +1,342 @@
+name: CI
+
+# Запуск при пуше в основные ветки и при открытии/обновлении PR
+on:
+  push:
+    branches: [master, develop]
+  pull_request:
+
+# Отмена устаревших запусков при новом коммите в ту же ветку
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ─────────────────────────────────────────────
+  # 1. Линтинг бэкенда (ruff)
+  # ─────────────────────────────────────────────
+  backend-lint:
+    name: Линтинг бэкенда
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установка uv
+        run: pip install uv
+
+      - name: Установка зависимостей (с dev)
+        run: uv sync
+
+      - name: Линтинг ruff
+        run: uv run ruff check .
+
+  # ─────────────────────────────────────────────
+  # 2. Тесты бэкенда (pytest + покрытие)
+  # ─────────────────────────────────────────────
+  backend-test:
+    name: Тесты бэкенда
+    needs: backend-lint
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установка uv
+        run: pip install uv
+
+      - name: Установка зависимостей
+        run: uv sync
+
+      - name: Генерация тестовых JWT-ключей
+        run: |
+          mkdir -p certs
+          openssl genrsa -out certs/jwt-private.pem 2048
+          openssl rsa -in certs/jwt-private.pem -pubout -out certs/jwt-public.pem
+
+      - name: Запуск тестов с покрытием
+        env:
+          # Unit-тесты используют SQLite in-memory — внешняя БД не нужна
+          DATABASE_URL: "sqlite:///:memory:"
+          # Тестовый Fernet-ключ (32 нулевых байта, base64url) — только для тестов
+          PASSWORD_SECRET_KEY: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+        run: |
+          uv run pytest \
+            --cov=app \
+            --cov-report=xml:coverage.xml \
+            --cov-report=term-missing \
+            --tb=short
+
+      - name: Генерация markdown-отчёта покрытия бэкенда
+        if: always()
+        run: |
+          python3 << 'EOF'
+          import os, pathlib
+          import xml.etree.ElementTree as ET
+
+          xml_path = pathlib.Path("coverage.xml")
+          out = pathlib.Path(os.environ["GITHUB_WORKSPACE"]) / "backend-coverage.md"
+
+          if not xml_path.exists():
+              out.write_text(
+                  "### Покрытие бэкенда\n\n"
+                  "| Пакет | Строки | Ветви |\n"
+                  "| :--- | :---: | :---: |\n"
+                  "| backend | нет тестов | нет тестов |\n\n"
+                  "> Тесты ещё не написаны\n"
+              )
+          else:
+              root = ET.parse(xml_path).getroot()
+              line_rate   = float(root.get("line-rate",   0)) * 100
+              branch_rate = float(root.get("branch-rate", 0)) * 100
+              lines_covered = int(root.get("lines-covered", 0))
+              lines_valid   = int(root.get("lines-valid",   0))
+
+              def badge(pct):
+                  if pct >= 90: return f"{pct:.1f}% 🟢"
+                  if pct >= 70: return f"{pct:.1f}% 🟡"
+                  return f"{pct:.1f}% 🔴"
+
+              out.write_text(
+                  f"### Покрытие бэкенда\n\n"
+                  f"| Пакет | Строки | Ветви |\n"
+                  f"| :--- | :---: | :---: |\n"
+                  f"| **backend** | {badge(line_rate)} ({lines_covered}/{lines_valid}) | {badge(branch_rate)} |\n\n"
+                  f"> 🟢 >= 90% &ensp; 🟡 >= 70% &ensp; 🔴 < 70%\n"
+              )
+          EOF
+
+      - name: Запись покрытия бэкенда в сводку задачи
+        if: always()
+        run: cat "$GITHUB_WORKSPACE/backend-coverage.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Загрузка отчёта покрытия бэкенда
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: |
+            backend-coverage.md
+            backend/coverage.xml
+          retention-days: 7
+
+  # ─────────────────────────────────────────────
+  # 3. Сборка бэкенда (проверка импорта)
+  # ─────────────────────────────────────────────
+  backend-build:
+    name: Сборка бэкенда
+    needs: backend-test
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Установка uv
+        run: pip install uv
+
+      - name: Установка prod-зависимостей
+        run: uv sync --no-dev
+
+      - name: Генерация тестовых JWT-ключей
+        run: |
+          mkdir -p certs
+          openssl genrsa -out certs/jwt-private.pem 2048
+          openssl rsa -in certs/jwt-private.pem -pubout -out certs/jwt-public.pem
+
+      - name: Проверка импорта приложения
+        # DATABASE_URL нужен для парсинга движка SQLAlchemy при импорте (реального подключения нет)
+        env:
+          DATABASE_URL: "sqlite:///./build_check.db"
+        # PYTHONPATH=app воспроизводит prod-окружение (docker-compose: cd app && uvicorn main:app)
+        run: PYTHONPATH=app uv run python -c "from main import app; print('OK')"
+
+  # ─────────────────────────────────────────────
+  # 4. Линтинг фронтенда (ESLint)
+  # ─────────────────────────────────────────────
+  frontend-lint:
+    name: Линтинг фронтенда
+    needs: backend-build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/frontend-setup
+
+      - name: Линтинг ESLint
+        run: pnpm turbo lint
+
+  # ─────────────────────────────────────────────
+  # 5. Тесты фронтенда (Vitest + покрытие)
+  # ─────────────────────────────────────────────
+  frontend-test:
+    name: Тесты фронтенда
+    needs: frontend-lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/frontend-setup
+
+      - name: Запуск тестов с покрытием
+        run: pnpm turbo test:coverage
+
+      # Скрипт уже пишет в $GITHUB_STEP_SUMMARY сам
+      - name: Генерация сводки покрытия фронтенда
+        if: always()
+        run: node scripts/coverage-summary.js
+
+      - name: Копирование отчёта в корень workspace
+        if: always()
+        run: cp coverage-report.md "$GITHUB_WORKSPACE/frontend-coverage.md"
+
+      - name: Загрузка отчёта покрытия фронтенда
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: |
+            frontend-coverage.md
+            frontend/**/coverage/
+          retention-days: 7
+
+  # ─────────────────────────────────────────────
+  # 6. Сборка фронтенда (Vite production build)
+  # ─────────────────────────────────────────────
+  frontend-build:
+    name: Сборка фронтенда
+    needs: frontend-test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/frontend-setup
+
+      - name: Production-сборка Vite
+        run: pnpm turbo build
+
+  # ─────────────────────────────────────────────
+  # ✦ Сводный отчёт покрытия (параллельно с frontend-build)
+  #   Запускается сразу после обоих тестовых job'ов
+  # ─────────────────────────────────────────────
+  coverage-report:
+    name: Сводный отчёт покрытия
+    needs: [backend-test, frontend-test]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Скачивание покрытия бэкенда
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-coverage
+          path: dl/backend
+        continue-on-error: true
+
+      - name: Скачивание покрытия фронтенда
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage
+          path: dl/frontend
+        continue-on-error: true
+
+      - name: Генерация сводного отчёта
+        run: |
+          # Заголовок
+          cat > combined-coverage.md << 'HEADER'
+          ## Покрытие тестами
+
+          HEADER
+
+          # Бэкенд
+          if [ -f dl/backend/backend-coverage.md ]; then
+            cat dl/backend/backend-coverage.md >> combined-coverage.md
+          else
+            printf '### Покрытие бэкенда\n\n> Данные недоступны\n' >> combined-coverage.md
+          fi
+
+          printf '\n' >> combined-coverage.md
+
+          # Фронтенд
+          if [ -f dl/frontend/frontend-coverage.md ]; then
+            cat dl/frontend/frontend-coverage.md >> combined-coverage.md
+          else
+            printf '### Покрытие фронтенда\n\n> Данные недоступны\n' >> combined-coverage.md
+          fi
+
+          # Метаданные запуска через переменные GitHub
+          printf '\n---\n' >> combined-coverage.md
+          printf '_Ветка: `${{ github.ref_name }}` · Коммит: [`%s`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}) · Запуск [#${{ github.run_number }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) · @${{ github.actor }}_\n' \
+            "$(echo '${{ github.sha }}' | cut -c1-7)" >> combined-coverage.md
+
+      - name: Запись сводки в GitHub Summary
+        if: always()
+        run: cat combined-coverage.md >> "$GITHUB_STEP_SUMMARY"
+
+      # Обновляемый sticky-комментарий в PR
+      - name: Комментарий с покрытием в PR
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: coverage-combined
+          path: combined-coverage.md
+
+      - name: Загрузка сводного отчёта покрытия
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: combined-coverage
+          path: combined-coverage.md
+          retention-days: 30
+
+  # ─────────────────────────────────────────────
+  # 7. Docker-образ бэкенда
+  # ─────────────────────────────────────────────
+  docker-backend:
+    name: Docker бэкенда
+    needs: frontend-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Сборка Docker-образа бэкенда
+        run: docker build -t ruftech-backend:ci ./backend
+
+  # ─────────────────────────────────────────────
+  # 8. Docker-образ фронтенда
+  # ─────────────────────────────────────────────
+  docker-frontend:
+    name: Docker фронтенда
+    needs: docker-backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Сборка Docker-образа фронтенда
+        run: docker build -t ruftech-frontend:ci ./frontend -f ./frontend/apps/pass/Dockerfile

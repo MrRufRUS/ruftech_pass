@@ -1,0 +1,10 @@
+{
+  "home": {
+    "title": "RufTECH Pass — Private Password Manager",
+    "description": "Store passwords locally. Open source, self-hosted, fully independent."
+  },
+  "auth": {
+    "title": "Log In — RufTECH Pass",
+    "description": "Log in to RufTECH Pass."
+  }
+}

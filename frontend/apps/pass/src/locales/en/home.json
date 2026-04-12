@@ -1,0 +1,44 @@
+{
+  "hero": {
+    "title": "RufTECH Pass",
+    "subtitle": "Private Password Manager",
+    "description": "Store passwords locally. No cloud, no tracking, no compromises."
+  },
+  "features": {
+    "heading": "Why RufTECH Pass",
+    "local": {
+      "title": "Local Storage",
+      "description": "Your data stays on your device. No servers ever store your passwords."
+    },
+    "opensource": {
+      "title": "Open Source",
+      "description": "Full transparency. Review every line of code yourself."
+    },
+    "selfhost": {
+      "title": "Self-hosting",
+      "description": "Deploy on your own server. Complete control over your infrastructure."
+    },
+    "independent": {
+      "title": "Independence",
+      "description": "No lock-in to Google, Apple, or any other corporation. Your data is yours alone."
+    }
+  },
+  "cta": {
+    "heading": "Try It Now",
+    "description": "Create an account and start managing your passwords securely.",
+    "button": "Create Account"
+  },
+  "signup": {
+    "title": "Sign Up",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "password": "Password",
+    "passwordPlaceholder": "Choose a strong password",
+    "submit": "Sign Up"
+  },
+  "about": {
+    "heading": "About the Project",
+    "description": "RufTECH Pass is built by students of ITMO University — the best of the best in information technology. We believe password security should be accessible to everyone.",
+    "team": "Team RufTECH"
+  }
+}
