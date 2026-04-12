@@ -148,7 +148,8 @@ jobs:
         run: uv sync --no-dev
 
       - name: Проверка импорта приложения
-        run: uv run python -c "from app.main import app; print('OK')"
+        # PYTHONPATH=app воспроизводит prod-окружение (docker-compose: cd app && uvicorn main:app)
+        run: PYTHONPATH=app uv run python -c "from main import app; print('OK')"
 
   # ─────────────────────────────────────────────
   # 4. Линтинг фронтенда (ESLint)
