@@ -33,6 +33,10 @@ dev = [
 testpaths = ["tests"]
 pythonpath = ["app"]
 
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
 [tool.ruff]
 exclude = [
     "alembic",
