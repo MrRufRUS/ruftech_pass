@@ -3,10 +3,10 @@ name: CI
 # Запуск при пуше в основные ветки и при открытии/обновлении PR
 on:
   push:
-    branches: [master, develop]
+    branches: [ master, develop ]
   pull_request:
 
-# Отмена устаревших запусков при новом коммите в ту же ветку
+    # Отмена устаревших запусков при новом коммите в ту же ветку
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -244,7 +244,7 @@ jobs:
   # ─────────────────────────────────────────────
   coverage-report:
     name: Сводный отчёт покрытия
-    needs: [backend-test, frontend-test]
+    needs: [ backend-test, frontend-test ]
     if: always()
     runs-on: ubuntu-latest
     permissions:
@@ -314,29 +314,3 @@ jobs:
           name: combined-coverage
           path: combined-coverage.md
           retention-days: 30
-
-  # ─────────────────────────────────────────────
-  # 7. Docker-образ бэкенда
-  # ─────────────────────────────────────────────
-  docker-backend:
-    name: Docker бэкенда
-    needs: frontend-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Сборка Docker-образа бэкенда
-        run: docker build -t ruftech-backend:ci ./backend
-
-  # ─────────────────────────────────────────────
-  # 8. Docker-образ фронтенда
-  # ─────────────────────────────────────────────
-  docker-frontend:
-    name: Docker фронтенда
-    needs: docker-backend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Сборка Docker-образа фронтенда
-        run: docker build -t ruftech-frontend:ci ./frontend -f ./frontend/apps/pass/Dockerfile
