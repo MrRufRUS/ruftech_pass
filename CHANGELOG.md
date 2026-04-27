@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.1.0...v1.2.0) (2026-04-27)
+
+
+### Features
+
+* добавил конфигов для кубера ([3397e38](https://github.com/MrRufRUS/ruftech_pass/commit/3397e380cc4bdb7a301f88f909a5b2b8b6dc3258))
+
 ## [1.1.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.0.0...v1.1.0) (2026-04-12)
 
 
