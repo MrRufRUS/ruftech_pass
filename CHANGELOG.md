@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.3.0...v1.4.0) (2026-04-27)
+
+
+### Features
+
+* обновил пайп ([9dc7295](https://github.com/MrRufRUS/ruftech_pass/commit/9dc72959e9ee469580aa9df6810faca31bb60efe))
+* обновил пайп ([0b5dd09](https://github.com/MrRufRUS/ruftech_pass/commit/0b5dd093a1e64fe19be94bd2e89d908d73813db6))
+
 ## [1.3.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.2.0...v1.3.0) (2026-04-27)
 
 
