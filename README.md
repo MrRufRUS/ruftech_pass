@@ -149,3 +149,5 @@ push в master (мердж "chore(master): release X.Y.Z")
 ```
 
 Docker-образы собираются **ровно один раз** — при мёрже release-PR. В обычном CI (на feature-PR и push в `master`) docker не собирается. Никакого ручного тегирования делать не нужно — release-please создаёт release-PR автоматически на основе [Conventional Commits](https://www.conventionalcommits.org/).
+
+> **Защита от публикации сломанного образа.** Перед сборкой и пушем job `docker-publish` ждёт успешного завершения CI (`Сборка фронтенда`) на том же коммите, что и тег. Если CI упал — образ не уйдёт в Docker Hub.

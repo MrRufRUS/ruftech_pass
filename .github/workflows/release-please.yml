@@ -37,6 +37,16 @@ jobs:
     env:
       TAG: ${{ needs.release-please.outputs.tag_name }}
     steps:
+      # Ждём, пока CI на этом же коммите завершится успешно — иначе не публикуем образ
+      - name: Ожидание успешного CI на коммите релиза
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: Сборка фронтенда
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 20
+          allowed-conclusions: success
+
       - uses: actions/checkout@v4
 
       - name: Вход в Docker Hub
