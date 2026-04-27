@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
 
   db:
@@ -12,7 +10,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-postgres}
       POSTGRES_DB: ${DATABASE_NAME:-ruftech-pass}
     ports:
-      - "${DATABASE_PORT:-5432}:5432"
+      - "${DATABASE_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -39,9 +37,7 @@ services:
       - ./backend/certs:/app/certs
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: vzhyx/ruftech-frontend:latest
     container_name: ruftech_backend
     depends_on:
       migrations:
@@ -61,11 +57,7 @@ services:
       "
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: apps/pass/Dockerfile
-      args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
+    image: vzhyx/ruftech-frontend:latest
     container_name: ruftech_frontend
     ports:
       - "8080:80"
