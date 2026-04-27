@@ -107,3 +107,45 @@ docker compose up --build
 ```bash
 VITE_API_URL=https://api.example.com docker compose up --build
 ```
+
+## Релизы и Docker-образы
+
+Релизами управляет [release-please](https://github.com/googleapis/release-please-action). CI и релизный пайплайн запускаются независимо при `push` в `master` (см. [docs/ci-cd-guide.md](docs/ci-cd-guide.md)).
+
+### Что происходит при мёрже PR в `master`
+
+| Что замёрджено                 | release-PR обновится | Тег и GitHub Release | Docker push |
+| ------------------------------ | :------------------: | :------------------: | :---------: |
+| feat / fix PR                  |          ✓           |          ✗           |      ✗      |
+| docs / chore (без user-facing) |          ✗           |          ✗           |      ✗      |
+| release-PR (от release-please) |          —           |          ✓           |      ✓      |
+
+#### 1. Обычный feature/fix PR смерджен в master
+
+```
+push в master
+    ├── CI запускается → линт/тесты/сборка
+    └── release-please запускается
+            └── анализирует новые conventional-коммиты
+                  ├── если есть feat/fix → создаёт ИЛИ обновляет release-PR
+                  └── release_created = false
+                       └── docker-publish ✗ НЕ запускается
+```
+
+Образы не собираются. Просто копится список изменений в release-PR.
+
+#### 2. release-PR смерджен в master
+
+```
+push в master (мердж "chore(master): release X.Y.Z")
+    ├── CI запускается → линт/тесты/сборка
+    └── release-please запускается
+            └── видит, что release-PR замёржен
+                  ├── создаёт git-тег vX.Y.Z
+                  ├── создаёт GitHub Release
+                  └── release_created = true
+                       └── docker-publish ✓ ЗАПУСКАЕТСЯ
+                            └── собирает и пушит образы (vX.Y.Z + latest)
+```
+
+Docker-образы собираются **ровно один раз** — при мёрже release-PR. В обычном CI (на feature-PR и push в `master`) docker не собирается. Никакого ручного тегирования делать не нужно — release-please создаёт release-PR автоматически на основе [Conventional Commits](https://www.conventionalcommits.org/).

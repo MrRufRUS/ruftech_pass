@@ -2,13 +2,15 @@
 
 ## Триггеры
 
-| Событие                         | Что запускает                                   |
-| ------------------------------- | ----------------------------------------------- |
-| `push` в `master` или `develop` | Полный CI-пайплайн                              |
-| Открытие / обновление любого PR | Полный CI-пайплайн                              |
-| Успешный CI на `master`         | Release Please (создание/обновление Release PR) |
+| Событие                         | Что запускает                                                |
+| ------------------------------- | ------------------------------------------------------------ |
+| `push` в `master` или `develop` | Полный CI-пайплайн                                           |
+| Открытие / обновление любого PR | Полный CI-пайплайн                                           |
+| `push` в `master`               | Release Please (создание/обновление Release PR или релиз)    |
 
-Конкурентные запуски отменяются: новый коммит в ту же ветку аннулирует предыдущий прогон (`cancel-in-progress: true`).
+CI и Release Please запускаются **независимо** друг от друга при пуше в `master` — release-please больше не зависит от завершения CI.
+
+Конкурентные запуски CI отменяются: новый коммит в ту же ветку аннулирует предыдущий прогон (`cancel-in-progress: true`).
 
 ---
 
@@ -23,9 +25,9 @@ backend-lint
                     └── frontend-lint
                             └── frontend-test ─── coverage-report (параллельно)
                                     └── frontend-build
-                                            └── docker-backend
-                                                    └── docker-frontend
 ```
+
+Docker-образы в CI **не собираются** — это делает только Release Please при создании релиза (см. ниже).
 
 ### 1. `backend-lint` — линтинг бэкенда
 
@@ -73,23 +75,30 @@ backend-lint
 - При PR — обновляет sticky-комментарий в PR (через `marocchino/sticky-pull-request-comment`)
 - Артефакт хранится 30 дней
 
-### 7–8. `docker-backend` / `docker-frontend`
-
-- Собирают Docker-образы для проверки корректности Dockerfile
-- **НЕ публикуют** образы в Registry — только локальная сборка с тегом `:ci`
-
 ---
 
 ## Релиз
 
 ### Как работает release-please
 
-1. После успешного CI на ветке `master` автоматически запускается `release-please`.
+1. При любом `push` в `master` запускается `release-please` (независимо от CI).
 2. Release Please анализирует commit-сообщения (Conventional Commits) и:
    - создаёт или обновляет **Release PR** с CHANGELOG
    - при мёрже Release PR — создаёт **git-тег** и **GitHub Release** автоматически
 
 **Теги создавать вручную не нужно** — release-please делает это самостоятельно.
+
+### Что происходит при мёрже PR в `master`
+
+| Что замёрджено                 | release-PR обновится | Тег и GitHub Release | Docker push |
+| ------------------------------ | :------------------: | :------------------: | :---------: |
+| feat / fix PR                  |          ✓           |          ✗           |      ✗      |
+| docs / chore (без user-facing) |          ✗           |          ✗           |      ✗      |
+| release-PR (от release-please) |          —           |          ✓           |      ✓      |
+
+**Обычный PR в master:** release-please обновляет release-PR, ничего не публикуется.
+
+**Мёрж release-PR в master:** release-please создаёт тег и GitHub Release, после чего job `docker-publish` собирает и пушит образы. Это **единственное** место в пайплайне, где собираются Docker-образы.
 
 ### Формат тега
 
