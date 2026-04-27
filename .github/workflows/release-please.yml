@@ -1,7 +1,9 @@
 name: Release Please
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [master]
 
 permissions:
@@ -14,22 +16,13 @@ jobs:
   # ─────────────────────────────────────────────
   release-please:
     name: Release Please
+    # Запускаемся только если CI на master завершился успехом.
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
-      # Не запускаем release-please пока CI на этом коммите не подтвердил зелёный статус.
-      # Если CI упал — этот шаг падает, release-PR/тег не трогаются.
-      - name: Ожидание успешного CI
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.sha }}
-          check-name: Сборка фронтенда
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 20
-          allowed-conclusions: success
-
       - uses: googleapis/release-please-action@v4
         id: release
         with:

@@ -6,9 +6,9 @@
 | ------------------------------- | ------------------------------------------------------------ |
 | `push` в `master` или `develop` | Полный CI-пайплайн                                           |
 | Открытие / обновление любого PR | Полный CI-пайплайн                                           |
-| `push` в `master`               | Release Please (создание/обновление Release PR или релиз)    |
+| Успешное завершение CI на `master` | Release Please (через `workflow_run`)                     |
 
-CI и Release Please запускаются **независимо** друг от друга при пуше в `master` — release-please больше не зависит от завершения CI.
+Release Please запускается **строго по цепочке** после CI: воркфлоу триггерится на событие `workflow_run` с `types: [completed]` и условием `conclusion == 'success'`. Если CI упал — Release Please вообще не стартует.
 
 Конкурентные запуски CI отменяются: новый коммит в ту же ветку аннулирует предыдущий прогон (`cancel-in-progress: true`).
 
@@ -81,31 +81,39 @@ Docker-образы в CI **не собираются** — это делает 
 
 ### Как работает release-please
 
-1. При любом `push` в `master` запускается `release-please` (независимо от CI).
+1. После успешного CI на ветке `master` срабатывает триггер `workflow_run` и стартует воркфлоу Release Please.
 2. Release Please анализирует commit-сообщения (Conventional Commits) и:
    - создаёт или обновляет **Release PR** с CHANGELOG
    - при мёрже Release PR — создаёт **git-тег** и **GitHub Release** автоматически
+3. После создания релиза запускается job `docker-publish` (через `needs: release-please` + `if: release_created`).
 
 **Теги создавать вручную не нужно** — release-please делает это самостоятельно.
 
+### Цепочка запуска
+
+```
+push в master
+    └── CI
+          ├── ❌ упал → workflow_run.conclusion=failure → Release Please НЕ стартует
+          └── ✓ зелёный → workflow_run.conclusion=success → Release Please стартует
+                └── release-please-action
+                      ├── обычный коммит  → обновляет release-PR
+                      └── мёрж release-PR → создаёт тег + GitHub Release
+                            └── docker-publish (только если release_created=true)
+                                  └── собирает и пушит образы
+```
+
 ### Что происходит при мёрже PR в `master`
 
-| Что замёрджено                 | release-PR обновится | Тег и GitHub Release | Docker push |
-| ------------------------------ | :------------------: | :------------------: | :---------: |
-| feat / fix PR                  |          ✓           |          ✗           |      ✗      |
-| docs / chore (без user-facing) |          ✗           |          ✗           |      ✗      |
-| release-PR (от release-please) |          —           |          ✓           |      ✓      |
+| Что замёрджено                 | CI | release-please | Тег + Release | Docker push |
+| ------------------------------ | :-: | :----------------: | :-----------: | :---------: |
+| feat / fix PR, CI зелёный      | ✓  | обновляет release-PR | ✗             | ✗           |
+| feat / fix PR, CI упал         | ✗  | не запускается     | ✗             | ✗           |
+| docs / chore (без user-facing) | ✓  | ничего не меняет   | ✗             | ✗           |
+| release-PR (от release-please) | ✓  | создаёт тег        | ✓             | ✓           |
+| release-PR, CI упал            | ✗  | не запускается     | ✗             | ✗           |
 
-**Обычный PR в master:** release-please обновляет release-PR, ничего не публикуется.
-
-**Мёрж release-PR в master:** release-please создаёт тег и GitHub Release, после чего job `docker-publish` собирает и пушит образы. Это **единственное** место в пайплайне, где собираются Docker-образы.
-
-> **Защита от сломанного master.** Job `release-please` физически стартует параллельно с CI (оба триггерятся по `push: master`), но первым шагом запускает `lewagon/wait-on-check-action`, ожидающий успеха CI-job `Сборка фронтенда` на том же коммите (`github.sha`). Поведение по конечному состоянию CI:
->
-> - **CI зелёный** → шаг ожидания проходит, дальше работает release-please-action и (если был замёржен release-PR) запускается `docker-publish`.
-> - **CI красный/cancelled** → шаг ожидания падает, release-please-action не выполняется. Release-PR не обновляется, тег не создаётся, `docker-publish` не запускается (зависит от `release-please` через `needs:`).
->
-> Таким образом ни release-PR с CHANGELOG, ни git-тег, ни Docker-образ не появляются без подтверждённого зелёного CI на конкретном коммите.
+Docker-образы собираются и пушатся **только** при мёрже release-PR с зелёным CI. Это единственное место в пайплайне, где образы попадают в Docker Hub.
 
 ### Формат тега
 

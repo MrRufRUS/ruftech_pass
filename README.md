@@ -110,44 +110,30 @@ VITE_API_URL=https://api.example.com docker compose up --build
 
 ## Релизы и Docker-образы
 
-Релизами управляет [release-please](https://github.com/googleapis/release-please-action). CI и релизный пайплайн запускаются независимо при `push` в `master` (см. [docs/ci-cd-guide.md](docs/ci-cd-guide.md)).
+Релизами управляет [release-please](https://github.com/googleapis/release-please-action). Релизный пайплайн запускается **по цепочке после успешного CI** на ветке `master` через триггер `workflow_run` (см. [docs/ci-cd-guide.md](docs/ci-cd-guide.md)).
 
-### Что происходит при мёрже PR в `master`
-
-| Что замёрджено                 | release-PR обновится | Тег и GitHub Release | Docker push |
-| ------------------------------ | :------------------: | :------------------: | :---------: |
-| feat / fix PR                  |          ✓           |          ✗           |      ✗      |
-| docs / chore (без user-facing) |          ✗           |          ✗           |      ✗      |
-| release-PR (от release-please) |          —           |          ✓           |      ✓      |
-
-#### 1. Обычный feature/fix PR смерджен в master
+### Цепочка запуска
 
 ```
 push в master
-    ├── CI запускается → линт/тесты/сборка
-    └── release-please запускается
-            └── анализирует новые conventional-коммиты
-                  ├── если есть feat/fix → создаёт ИЛИ обновляет release-PR
-                  └── release_created = false
-                       └── docker-publish ✗ НЕ запускается
+    └── CI (lint → test → build для backend и frontend)
+            ├── ❌ упал                → release-please НЕ запускается
+            └── ✓ зелёный
+                  └── Release Please (триггер: workflow_run "CI" + conclusion=success)
+                        ├── анализирует conventional-коммиты
+                        ├── создаёт/обновляет release-PR (если есть feat/fix)
+                        └── при мёрже release-PR — создаёт тег vX.Y.Z + GitHub Release
+                              └── docker-publish (только если release_created=true)
+                                    └── собирает и пушит образы (vX.Y.Z + latest)
 ```
 
-Образы не собираются. Просто копится список изменений в release-PR.
+### Что происходит при мёрже PR в `master`
 
-#### 2. release-PR смерджен в master
+| Что замёрджено                 | CI | release-please | Тег + Release | Docker push |
+| ------------------------------ | :-: | :----------------: | :-----------: | :---------: |
+| feat / fix PR, CI зелёный      | ✓  | обновляет release-PR | ✗             | ✗           |
+| feat / fix PR, CI упал         | ✗  | не запускается     | ✗             | ✗           |
+| release-PR (от release-please) | ✓  | создаёт тег        | ✓             | ✓           |
+| release-PR, CI упал            | ✗  | не запускается     | ✗             | ✗           |
 
-```
-push в master (мердж "chore(master): release X.Y.Z")
-    ├── CI запускается → линт/тесты/сборка
-    └── release-please запускается
-            └── видит, что release-PR замёржен
-                  ├── создаёт git-тег vX.Y.Z
-                  ├── создаёт GitHub Release
-                  └── release_created = true
-                       └── docker-publish ✓ ЗАПУСКАЕТСЯ
-                            └── собирает и пушит образы (vX.Y.Z + latest)
-```
-
-Docker-образы собираются **ровно один раз** — при мёрже release-PR. В обычном CI (на feature-PR и push в `master`) docker не собирается. Никакого ручного тегирования делать не нужно — release-please создаёт release-PR автоматически на основе [Conventional Commits](https://www.conventionalcommits.org/).
-
-> **Защита от сломанного master.** Job `release-please` начинается с шага `lewagon/wait-on-check-action`, который ждёт зелёный CI (`Сборка фронтенда`) на текущем коммите. Если CI упал — release-please падает на ожидании: release-PR не обновляется, тег не создаётся, docker не публикуется. Ничего не уходит в Docker Hub без подтверждённого успешного CI.
+Docker-образы собираются **ровно один раз** — при мёрже release-PR на зелёном CI. В обычном CI (на feature-PR и push в `master`) docker не собирается. Никакого ручного тегирования делать не нужно — release-please создаёт release-PR автоматически на основе [Conventional Commits](https://www.conventionalcommits.org/).
