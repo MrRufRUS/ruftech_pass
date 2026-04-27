@@ -1,4 +1,4 @@
-import { DefaultHttpClient, withCredentials, withLogging, withUnauthorizedHandler } from '@ruftech/http-client'
+import { DefaultHttpClient, withBaseURL, withCredentials, withLogging, withUnauthorizedHandler } from '@ruftech/http-client'
 import { DefaultLogger } from '@ruftech/logger'
 
 export const logger = DefaultLogger.create()
@@ -12,6 +12,7 @@ export function setUnauthorizedHandler(handler: () => void): void {
 
 export const httpClient = DefaultHttpClient
   .create(globalThis.fetch.bind(globalThis))
+  .applyPlugin(withBaseURL('/api'))
   .applyPlugin(withCredentials())
   .applyPlugin(withLogging((info) => logger.log(info.error ? 'error' : 'info', info)))
   .applyPlugin(withUnauthorizedHandler(() => _unauthorizedHandler?.()))
