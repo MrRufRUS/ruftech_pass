@@ -401,20 +401,24 @@ jobs:
           path: combined-coverage.md
           retention-days: 30
 
-notify-telegram:
-  name: Telegram notify
-  runs-on: ubuntu-latest
-  needs: [backend-build, frontend-build, coverage-report]
-  if: always()
+  notify-telegram:
+    name: Уведомление в Telegram
+    runs-on: ubuntu-latest
+    needs: [backend-build, frontend-build, coverage-report]
+    if: always()
+    steps:
+      - name: Set error message if workflow failed
+        if: failure()
+        run: echo "TELEGRAM_ERROR=Ошибка в workflow. Проверьте логи." >> $GITHUB_ENV
 
-  steps:
-    - name: Send Telegram message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ vars.TELEGRAM_CHAT_ID }}
-        token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        message: |
-          📢 CI/CD завершён
-          Backend: ${{ needs.backend-build.result }}
-          Frontend: ${{ needs.frontend-build.result }}
-          Coverage: ${{ needs.coverage-report.result }}
+      - name: Send Telegram message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ vars.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            📢 CI/CD завершён
+            Backend: ${{ needs.backend-build.result }}
+            Frontend: ${{ needs.frontend-build.result }}
+            Coverage: ${{ needs.coverage-report.result }}
+            Ошибка: ${{ env.TELEGRAM_ERROR || 'Нет ошибок' }}
