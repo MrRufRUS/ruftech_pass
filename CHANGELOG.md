@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.5.0...v1.6.0) (2026-05-11)
+
+
+### Features
+
+* добавлен новый файл telegram-notify.yml для уведомлений ([8dcb92a](https://github.com/MrRufRUS/ruftech_pass/commit/8dcb92aa1426eeb9c9f40bedf169178971b239bd))
+
 ## [1.5.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.4.0...v1.5.0) (2026-04-27)
 
 
