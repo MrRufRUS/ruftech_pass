@@ -13,7 +13,7 @@ spec:
     spec:
       initContainers:
         - name: migrate
-          image: vzhyx/ruftech-backend:v1.6.0
+          image: vzhyx/ruftech-backend:v1.7.0
           imagePullPolicy: IfNotPresent
           command: ["sh", "-c", "uv run alembic upgrade head"]
           envFrom:
@@ -21,7 +21,7 @@ spec:
                 name: app-secrets
       containers:
         - name: backend
-          image: vzhyx/ruftech-backend:v1.6.0
+          image: vzhyx/ruftech-backend:v1.7.0
           imagePullPolicy: IfNotPresent
           workingDir: /app/app
           command: ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
