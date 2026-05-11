@@ -2,9 +2,9 @@ name: Release Please
 
 on:
   workflow_run:
-    workflows: [ "CI" ]
-    types: [ completed ]
-    branches: [ master ]
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master]
 
 permissions:
   contents: write
@@ -66,3 +66,57 @@ jobs:
           docker tag $DOCKERHUB_USERNAME/ruftech-frontend:$TAG $DOCKERHUB_USERNAME/ruftech-frontend:latest
           docker push $DOCKERHUB_USERNAME/ruftech-frontend:$TAG
           docker push $DOCKERHUB_USERNAME/ruftech-frontend:latest
+
+  # ─────────────────────────────────────────────
+  # 3. GitOps: обновление тегов в k8s-манифестах
+  #    ArgoCD заметит diff и сам выкатит новую версию в кластер
+  # ─────────────────────────────────────────────
+  update-manifests:
+    name: GitOps-bump тегов в k8s-манифестах
+    needs: [release-please, docker-publish]
+    if: ${{ needs.release-please.outputs.release_created }}
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ needs.release-please.outputs.tag_name }}
+    steps:
+      # Чекаут с PAT, чтобы коммит пошёл от имени release-bot
+      # и при необходимости мог триггерить workflow
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
+          # Без fetch-depth полная история не нужна, default ок
+
+      - name: Настройка git
+        run: |
+          git config user.name  "release-please-bot"
+          git config user.email "release-please-bot@users.noreply.github.com"
+
+      - name: Обновление образа бэкенда в манифесте
+        run: |
+          sed -i "s|image: vzhyx/ruftech-backend:.*|image: vzhyx/ruftech-backend:${TAG}|g" k8s/app/30-backend.yaml
+
+      - name: Обновление образа фронтенда в манифесте
+        run: |
+          sed -i "s|image: vzhyx/ruftech-frontend:.*|image: vzhyx/ruftech-frontend:${TAG}|g" k8s/app/40-frontend.yaml
+
+      - name: Проверка изменений
+        run: |
+          echo "=== Backend ==="
+          grep -n "image:" k8s/app/30-backend.yaml
+          echo "=== Frontend ==="
+          grep -n "image:" k8s/app/40-frontend.yaml
+          echo "=== git diff ==="
+          git diff --stat
+
+      - name: Коммит и пуш bump'а
+        run: |
+          if git diff --quiet; then
+            echo "Манифесты уже актуальны, коммит не требуется"
+            exit 0
+          fi
+          git add k8s/app/30-backend.yaml k8s/app/40-frontend.yaml
+          git commit -m "chore(deploy): bump images to ${TAG}
+
+          Automated tag bump after release ${TAG}.
+          ArgoCD will detect the diff and sync the cluster."
+          git push origin master
