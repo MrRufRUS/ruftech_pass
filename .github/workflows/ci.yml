@@ -3,10 +3,10 @@ name: CI
 # Запуск при пуше в основные ветки и при открытии/обновлении PR
 on:
   push:
-    branches: [ master, develop ]
+    branches: [master, develop]
   pull_request:
 
-    # Отмена устаревших запусков при новом коммите в ту же ветку
+# Отмена устаревших запусков при новом коммите в ту же ветку
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -133,6 +133,47 @@ jobs:
           retention-days: 7
 
   # ─────────────────────────────────────────────
+  # 2.5. SonarQube-анализ бэкенда
+  # ─────────────────────────────────────────────
+  backend-sonar:
+    name: SonarQube-анализ бэкенда
+    needs: backend-test
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Sonar нуждается в полной истории для blame и new-code detection
+          fetch-depth: 0
+
+      - name: Скачивание отчёта покрытия бэкенда
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-coverage
+          path: dl/
+
+      - name: Размещение coverage.xml в backend/
+        run: |
+          cp dl/backend/coverage.xml backend/coverage.xml
+          ls -la backend/coverage.xml
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectBaseDir: backend
+
+      - name: SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          scanMetadataReportFile: backend/.scannerwork/report-task.txt
+
+  # ─────────────────────────────────────────────
   # 3. Сборка бэкенда (проверка импорта)
   # ─────────────────────────────────────────────
   backend-build:
@@ -202,6 +243,9 @@ jobs:
       - name: Запуск тестов с покрытием
         run: pnpm turbo test:coverage
 
+      - name: Слияние покрытия в coverage-all
+        run: pnpm coverage:merge
+
       # Скрипт уже пишет в $GITHUB_STEP_SUMMARY сам
       - name: Генерация сводки покрытия фронтенда
         if: always()
@@ -219,7 +263,49 @@ jobs:
           path: |
             frontend-coverage.md
             frontend/**/coverage/
+            frontend/coverage-all/
           retention-days: 7
+
+  # ─────────────────────────────────────────────
+  # 5.5. SonarQube-анализ фронтенда
+  # ─────────────────────────────────────────────
+  frontend-sonar:
+    name: SonarQube-анализ фронтенда
+    needs: frontend-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Скачивание отчёта покрытия фронтенда
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-coverage
+          path: dl/
+
+      - name: Размещение lcov-отчёта
+        run: |
+          mkdir -p frontend/coverage-all
+          cp dl/frontend/coverage-all/lcov.info frontend/coverage-all/lcov.info
+          ls -la frontend/coverage-all/lcov.info
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectBaseDir: frontend
+
+      - name: SonarQube Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          scanMetadataReportFile: frontend/.scannerwork/report-task.txt
 
   # ─────────────────────────────────────────────
   # 6. Сборка фронтенда (Vite production build)
@@ -244,7 +330,7 @@ jobs:
   # ─────────────────────────────────────────────
   coverage-report:
     name: Сводный отчёт покрытия
-    needs: [ backend-test, frontend-test ]
+    needs: [backend-test, frontend-test]
     if: always()
     runs-on: ubuntu-latest
     permissions:
