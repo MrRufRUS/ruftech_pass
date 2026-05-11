@@ -12,11 +12,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  #─────────────────────────────────────────────
+  # 0. Уведомление в Telegram о старте CI
+  #─────────────────────────────────────────────
+  notify-start:
+    name: CI старт
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Telegram notify (start)
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ vars.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🚀 CI/CD STARTED
+
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
   # ─────────────────────────────────────────────
   # 1. Линтинг бэкенда (ruff)
   # ─────────────────────────────────────────────
   backend-lint:
     name: Линтинг бэкенда
+    needs: notify-start
     runs-on: ubuntu-24.04
     defaults:
       run:
@@ -501,10 +525,30 @@ jobs:
           to: ${{ vars.TELEGRAM_CHAT_ID }}
           token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           message: |
-            📢 CI/CD DONE
+
+            📢 *CI/CD PIPELINE SUMMARY*
+
+            🧾 Repository: `${{ github.repository }}`
+            🌿 Branch: `${{ github.ref_name }}`
+            👤 Actor: `${{ github.actor }}`
+            🔗 Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            ---------
 
             backend-build: ${{ needs.backend-build.result }}
             frontend-build: ${{ needs.frontend-build.result }}
             coverage: ${{ needs.coverage-report.result }}
             backend-sonar: ${{ needs.backend-sonar.result }}
             frontend-sonar: ${{ needs.frontend-sonar.result }}
+            --------
+
+            ${{
+              (needs.backend-build.result == 'success' &&
+              needs.frontend-build.result == 'success' &&
+              needs.coverage-report.result == 'success' &&
+              needs.backend-sonar.result == 'success' &&
+              needs.frontend-sonar.result == 'success')
+              && '✅ *PIPELINE SUCCESS*'
+              || '❌ *PIPELINE FAILED*'
+            }}
+            🕒 Commit: `${{ github.sha }}`
