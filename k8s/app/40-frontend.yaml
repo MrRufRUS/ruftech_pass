@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: vzhyx/ruftech-frontend:v1.5.0
+          image: vzhyx/ruftech-frontend:v1.6.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
