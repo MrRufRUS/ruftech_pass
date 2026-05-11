@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.7.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.6.0...v1.7.0) (2026-05-11)
+
+
+### Features
+
+* **CI:** бамп версий ([be24311](https://github.com/MrRufRUS/ruftech_pass/commit/be2431135ec2b68ff34dfd48c7d6c7971b601239))
+* **CI:** бамп версий ([6e2abeb](https://github.com/MrRufRUS/ruftech_pass/commit/6e2abebffa725ff7749a7b838854a8ea302e3cba))
+* **CI:** добавить уведомления в Telegram о старте и завершении CI/CD ([ffe2189](https://github.com/MrRufRUS/ruftech_pass/commit/ffe2189ffa3e854d75b325c39e1bd5206f346291))
+* **CI:** добавить уведомления в Telegram о статусе задач CI ([461a05f](https://github.com/MrRufRUS/ruftech_pass/commit/461a05f8ca09c1a781418de29a77e710960e23ea))
+
 ## [1.6.0](https://github.com/MrRufRUS/ruftech_pass/compare/v1.5.0...v1.6.0) (2026-05-11)
 
 
