@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: ruftech-pass
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: backend }
+  template:
+    metadata:
+      labels: { app: backend }
+    spec:
+      initContainers:
+        - name: migrate
+          image: vzhyx/ruftech-backend:v1.5.0
+          imagePullPolicy: IfNotPresent
+          command: ["sh", "-c", "uv run alembic upgrade head"]
+          envFrom:
+            - secretRef:
+                name: app-secrets
+      containers:
+        - name: backend
+          image: vzhyx/ruftech-backend:v1.5.0
+          imagePullPolicy: IfNotPresent
+          workingDir: /app/app
+          command: ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: app-secrets
+          volumeMounts:
+            - name: jwt-certs
+              mountPath: /app/certs
+              readOnly: true
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet: { path: /health, port: 8000 }
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health, port: 8000 }
+            initialDelaySeconds: 15
+            periodSeconds: 15
+      volumes:
+        - name: jwt-certs
+          secret:
+            secretName: jwt-keys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: ruftech-pass
+  labels: { app: backend }
+spec:
+  selector: { app: backend }
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
